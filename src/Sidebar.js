@@ -3,7 +3,16 @@ import "./Sidebar.css";
 export function Sidebar() {
     return (
         <div className="sidebar">
-            <p> test sidebar</p>
+            <div>
+                <p>Profile section</p>
+            </div>
+            <div className="search">
+                <input
+                className="search__bar"
+                    type="text"
+                    placeholder="Search"
+                    />
+            </div>
         </div>
     );
 }
