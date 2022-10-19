@@ -95,7 +95,7 @@ const Room = () => {
     };
 
     return (
-        <div className="flex flex-col h-screen relative">
+        <div>
             <header className="flex h-16 justify-center items-center text-xl bg-black text-white">
                 <div>ion-sfu</div>
                 <div className="absolute top-2  right-5">
