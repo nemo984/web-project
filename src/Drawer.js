@@ -1,9 +1,29 @@
-import React from "react";
+import React, { useState } from "react";
 
 const Drawer = () => {
+    // get from api
+    const [channels, setChannels] = useState([
+        {
+            name: "Web Programming",
+            rooms: [{ name: "Default" }, { name: "AFK" }],
+        },
+        {
+            name: "Artificial Unintelligent",
+            rooms: [
+                { name: "Default" },
+                { name: "AFK" },
+                { name: "Freestyle" },
+            ],
+        },
+        {
+            name: "Advanced Wallpaper Design",
+            rooms: [],
+        },
+    ]);
+
     return (
         <>
-            <div className="drawer">
+            <div className="drawer max-w-md">
                 <input
                     id="my-drawer"
                     type="checkbox"
@@ -17,7 +37,7 @@ const Drawer = () => {
                         Open drawer
                     </label>
                 </div>
-                <div className="drawer-side max-w-md">
+                <div className="drawer-side">
                     <label
                         htmlFor="my-drawer"
                         className="drawer-overlay"
@@ -29,11 +49,12 @@ const Drawer = () => {
                         <Profile />
                         <input
                             type="text"
-                            placeholder="Type here"
+                            placeholder="Search Room or Channel"
                             className="input input-bordered w-full"
                         />
-                        <Channel name={"Web Programming"} />
-                        <Channel name={"Artificial Unintelligent"} />
+                        {channels.map((channel, i) => (
+                            <Channel key={i} channel={channel} />
+                        ))}
                     </ul>
                 </div>
             </div>
@@ -44,7 +65,7 @@ const Drawer = () => {
 //TODO: put components into each js file
 const Profile = () => {
     return (
-        <div className="dropdown">
+        <div className="dropdown mb-3">
             <label tabIndex={0} className="btn btn-ghost btn-circle avatar">
                 <div className="w-full rounded-full">
                     <img src="https://placeimg.com/80/80/people" />
@@ -62,6 +83,28 @@ const Profile = () => {
                 </li>
                 <li>
                     <a>Settings</a>
+                    <label htmlFor="my-modal" className="btn modal-button">
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="icon icon-tabler icon-tabler-settings"
+                            width="24"
+                            height="24"
+                            viewBox="0 0 24 24"
+                            strokeWidth="2"
+                            stroke="currentColor"
+                            fill="none"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                        >
+                            <path
+                                stroke="none"
+                                d="M0 0h24v24H0z"
+                                fill="none"
+                            ></path>
+                            <path d="M10.325 4.317c.426 -1.756 2.924 -1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543 -.94 3.31 .826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756 .426 1.756 2.924 0 3.35a1.724 1.724 0 0 0 -1.066 2.573c.94 1.543 -.826 3.31 -2.37 2.37a1.724 1.724 0 0 0 -2.572 1.065c-.426 1.756 -2.924 1.756 -3.35 0a1.724 1.724 0 0 0 -2.573 -1.066c-1.543 .94 -3.31 -.826 -2.37 -2.37a1.724 1.724 0 0 0 -1.065 -2.572c-1.756 -.426 -1.756 -2.924 0 -3.35a1.724 1.724 0 0 0 1.066 -2.573c-.94 -1.543 .826 -3.31 2.37 -2.37c1 .608 2.296 .07 2.572 -1.065z"></path>
+                            <circle cx="12" cy="12" r="3"></circle>
+                        </svg>
+                    </label>
                 </li>
                 <li>
                     <a>Logout</a>
@@ -71,7 +114,7 @@ const Profile = () => {
     );
 };
 
-const Channel = ({ name }) => {
+const Channel = ({ channel }) => {
     return (
         <div
             className="collapse collapse-arrow text-secondary font-light
@@ -79,43 +122,22 @@ const Channel = ({ name }) => {
         >
             <input type="checkbox" />
             <div className="collapse-title text-xl font-medium">
-                <div className="flex justify-between">
-                    {name}
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        class="icon icon-tabler icon-tabler-settings"
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        stroke-width="2"
-                        stroke="currentColor"
-                        fill="none"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                    >
-                        <path
-                            stroke="none"
-                            d="M0 0h24v24H0z"
-                            fill="none"
-                        ></path>
-                        <path d="M10.325 4.317c.426 -1.756 2.924 -1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543 -.94 3.31 .826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756 .426 1.756 2.924 0 3.35a1.724 1.724 0 0 0 -1.066 2.573c.94 1.543 -.826 3.31 -2.37 2.37a1.724 1.724 0 0 0 -2.572 1.065c-.426 1.756 -2.924 1.756 -3.35 0a1.724 1.724 0 0 0 -2.573 -1.066c-1.543 .94 -3.31 -.826 -2.37 -2.37a1.724 1.724 0 0 0 -1.065 -2.572c-1.756 -.426 -1.756 -2.924 0 -3.35a1.724 1.724 0 0 0 1.066 -2.573c-.94 -1.543 .826 -3.31 2.37 -2.37c1 .608 2.296 .07 2.572 -1.065z"></path>
-                        <circle cx="12" cy="12" r="3"></circle>
-                    </svg>
-                </div>
+                <div className="flex justify-between">{channel.name}</div>
             </div>
             <div className="collapse-content">
-                <Room name={"Default Meeting"} />
-                <Room name={"AFK"} />
+                {channel.rooms.map((room, i) => (
+                    <Room key={i} room={room} />
+                ))}
             </div>
         </div>
     );
 };
 
-const Room = ({ name }) => {
+const Room = ({ room }) => {
     return (
         <li>
             <div>
-                {name}
+                {room.name}
                 <button className="btn btn-square btn-ghost">
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -135,7 +157,5 @@ const Room = ({ name }) => {
         </li>
     );
 };
-
-const ChannelSettings = () => {};
 
 export default Drawer;
