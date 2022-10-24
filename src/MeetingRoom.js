@@ -23,7 +23,7 @@ const MeetingRoom = () => {
 
     return (
         <>
-            <div className="flex flex-wrap content-start m-10">
+            <div className="flex flex-wrap content-start mt-10 ml-40 overflow-auto">
                 {participants.map((participant, i) => (
                     <Participant key={i} participant={participant} />
                 ))}
