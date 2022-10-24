@@ -11,7 +11,7 @@ const Drawer = () => {
                 <div className="drawer-side">
                     <label htmlFor="my-drawer" className="drawer-overlay"></label>
                     <ul className="menu p-4 overflow-y-auto w-80 bg-base-100 text-base-content">
-                        <input type="text" placeholder="Type here" className="input input-bordered w-full max-w-xs" />
+                        <input type="text" placeholder="Type here" className="input input-bordered w-full max-w-xs h-24" />
                         <li><a>
                             <div className="collapse">
                                 <input type="checkbox" />
