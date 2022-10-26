@@ -19,6 +19,14 @@ const Drawer = () => {
             name: "Advanced Wallpaper Design",
             rooms: [],
         },
+        {
+            name: "Shirt",
+            rooms: [
+                {
+                    name: "Default",
+                },
+            ],
+        },
     ]);
 
     return (
@@ -27,7 +35,8 @@ const Drawer = () => {
                 <input
                     id="my-drawer"
                     type="checkbox"
-                    className="drawer-toggle"
+                    className="drawer-toggle hidden"
+                    defaultChecked={true}
                 />
                 <div className="drawer-content">
                     <label
@@ -44,17 +53,23 @@ const Drawer = () => {
                     ></label>
                     <ul
                         className="menu p-4 overflow-y-auto 
- bg-base-100 text-base-content bg-primary"
+ bg-base-100 text-base-content bg-primary flex flex-col justify-between"
                     >
-                        <Profile />
-                        <input
-                            type="text"
-                            placeholder="Search Room or Channel"
-                            className="input input-bordered w-full"
-                        />
-                        {channels.map((channel, i) => (
-                            <Channel key={i} channel={channel} />
-                        ))}
+                        <div>
+                            <Profile />
+                            <input
+                                type="text"
+                                placeholder="Search Room or Channel"
+                                className="input input-bordered w-full"
+                            />
+                            {channels.map((channel, i) => (
+                                <Channel key={i} channel={channel} />
+                            ))}
+                        </div>
+
+                        <div className="w-full h-24 bg-secondary justify-self-end">
+                            FF
+                        </div>
                     </ul>
                 </div>
             </div>

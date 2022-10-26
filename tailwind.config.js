@@ -2,7 +2,12 @@
 module.exports = {
     content: ["./src/**/*.{js,jsx,ts,tsx}"],
     theme: {
-        extend: {},
+        extend: {
+            colors: {
+                lightgreen: "#D0FFDF",
+                shirt: "#D3D3D3",
+            },
+        },
     },
     daisyui: {
         themes: [
@@ -12,7 +17,7 @@ module.exports = {
 
                     secondary: "#FFFFFF",
 
-                    accent: "#47B5FF",
+                    accent: "#8d3f1b",
 
                     neutral: "#3D4451",
 
