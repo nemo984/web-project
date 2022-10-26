@@ -66,9 +66,9 @@ const Drawer = () => {
                                 <Channel key={i} channel={channel} />
                             ))}
                         </div>
-
-                        <div className="w-full h-24 bg-secondary justify-self-end">
-                            FF
+                        <div className="w-full h-24 bg-secondary grid justify-items-stretch">
+                            <label htmlFor="Create-Channel" className="btn justify-self-end bg-Hover">+</label>
+                            <p>FF</p>
                         </div>
                     </ul>
                 </div>

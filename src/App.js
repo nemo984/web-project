@@ -3,6 +3,8 @@ import "./App.css";
 import Drawer from "./Drawer";
 import MeetingRoom from "./MeetingRoom";
 import ChannelSettings from "./ChannelSettings";
+import CreateChannel from "./CreateChannel";
+import CreateRoom from "./CreateRoom";
 
 function App() {
     return (
@@ -10,8 +12,8 @@ function App() {
             <Drawer />
             <ChannelSettings />
             {/* <Settings /> */}
-            {/* <CreateChannel /> */}
-            {/* <CreateRoom /> */}
+            <CreateChannel />
+            <CreateRoom />
 
             <MeetingRoom />
             {/*<ChannelRoom /> */}
