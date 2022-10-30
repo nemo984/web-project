@@ -19,6 +19,14 @@ const Drawer = () => {
             name: "Advanced Wallpaper Design",
             rooms: [],
         },
+        {
+            name: "Shirt",
+            rooms: [
+                {
+                    name: "Default",
+                },
+            ],
+        },
     ]);
 
     return (
@@ -27,7 +35,8 @@ const Drawer = () => {
                 <input
                     id="my-drawer"
                     type="checkbox"
-                    className="drawer-toggle"
+                    className="drawer-toggle hidden"
+                    defaultChecked={true}
                 />
                 <div className="drawer-content">
                     <label
@@ -44,17 +53,28 @@ const Drawer = () => {
                     ></label>
                     <ul
                         className="menu p-4 overflow-y-auto 
- bg-base-100 text-base-content bg-primary"
+ bg-base-100 text-base-content bg-primary flex flex-col justify-between"
                     >
-                        <Profile />
-                        <input
-                            type="text"
-                            placeholder="Search Room or Channel"
-                            className="input input-bordered w-full"
-                        />
-                        {channels.map((channel, i) => (
-                            <Channel key={i} channel={channel} />
-                        ))}
+                        <div>
+                            <Profile />
+                            <input
+                                type="text"
+                                placeholder="Search Room or Channel"
+                                className="input input-bordered w-full"
+                            />
+                            {channels.map((channel, i) => (
+                                <Channel key={i} channel={channel} />
+                            ))}
+                        </div>
+                        <div className="w-full h-24 bg-secondary grid justify-items-stretch">
+                            <label
+                                htmlFor="Create-Channel"
+                                className="btn justify-self-end bg-Hover"
+                            >
+                                +
+                            </label>
+                            <p>FF</p>
+                        </div>
                     </ul>
                 </div>
             </div>
@@ -82,10 +102,11 @@ const Profile = () => {
                     </a>
                 </li>
                 <li>
-                    <label htmlFor="my-setting" className="btn modal-button"></label>
-                </li>
-                <li>
-                    <label htmlFor="my-modal" className="btn modal-button">
+                    <a>Settings</a>
+                    <label
+                        htmlFor="channel-settings"
+                        className="btn modal-button"
+                    >
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
                             className="icon icon-tabler icon-tabler-settings"
@@ -123,9 +144,39 @@ const Channel = ({ channel }) => {
         "
         >
             <input type="checkbox" />
+            <div className="flex"></div>
             <div className="collapse-title text-xl font-medium">
-                <div className="flex justify-between">{channel.name}</div>
+                <div className="flex justify-between">
+                    {channel.name}
+                    <button
+                        onClick={(e) =>
+                            console.log("settings: " + channel.name)
+                        }
+                    >
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="icon icon-tabler icon-tabler-settings"
+                            width="24"
+                            height="24"
+                            viewBox="0 0 24 24"
+                            strokeWidth="2"
+                            stroke="currentColor"
+                            fill="none"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                        >
+                            <path
+                                stroke="none"
+                                d="M0 0h24v24H0z"
+                                fill="none"
+                            ></path>
+                            <path d="M10.325 4.317c.426 -1.756 2.924 -1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543 -.94 3.31 .826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756 .426 1.756 2.924 0 3.35a1.724 1.724 0 0 0 -1.066 2.573c.94 1.543 -.826 3.31 -2.37 2.37a1.724 1.724 0 0 0 -2.572 1.065c-.426 1.756 -2.924 1.756 -3.35 0a1.724 1.724 0 0 0 -2.573 -1.066c-1.543 .94 -3.31 -.826 -2.37 -2.37a1.724 1.724 0 0 0 -1.065 -2.572c-1.756 -.426 -1.756 -2.924 0 -3.35a1.724 1.724 0 0 0 1.066 -2.573c-.94 -1.543 .826 -3.31 2.37 -2.37c1 .608 2.296 .07 2.572 -1.065z"></path>
+                            <circle cx="12" cy="12" r="3"></circle>
+                        </svg>
+                    </button>
+                </div>
             </div>
+
             <div className="collapse-content">
                 {channel.rooms.map((room, i) => (
                     <Room key={i} room={room} />
