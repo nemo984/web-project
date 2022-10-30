@@ -82,7 +82,9 @@ const Profile = () => {
                     </a>
                 </li>
                 <li>
-                    <a>Settings</a>
+                    <label htmlFor="my-setting" className="btn modal-button"></label>
+                </li>
+                <li>
                     <label htmlFor="my-modal" className="btn modal-button">
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
@@ -157,5 +159,6 @@ const Room = ({ room }) => {
         </li>
     );
 };
+
 
 export default Drawer;
