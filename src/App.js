@@ -2,7 +2,7 @@
 import "./App.css";
 import Drawer from "./Drawer";
 import MeetingRoom from "./MeetingRoom";
-import ChannelSettings from "./ChannelSettings";
+import ChannelSettings from "./components/ChannelSettings/ChannelSettings";
 import CreateChannel from "./CreateChannel";
 import CreateRoom from "./CreateRoom";
 

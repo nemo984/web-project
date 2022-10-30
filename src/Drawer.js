@@ -103,7 +103,10 @@ const Profile = () => {
                 </li>
                 <li>
                     <a>Settings</a>
-                    <label htmlFor="my-modal" className="btn modal-button">
+                    <label
+                        htmlFor="channel-settings"
+                        className="btn modal-button"
+                    >
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
                             className="icon icon-tabler icon-tabler-settings"
