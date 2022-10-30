@@ -5,6 +5,7 @@ import MeetingRoom from "./MeetingRoom";
 import ChannelSettings from "./components/ChannelSettings/ChannelSettings";
 import CreateChannel from "./CreateChannel";
 import CreateRoom from "./CreateRoom";
+import Settings from "./Setting";
 
 function App() {
     return (
