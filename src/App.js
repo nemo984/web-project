@@ -5,18 +5,29 @@ import MeetingRoom from "./MeetingRoom";
 import ChannelSettings from "./ChannelSettings";
 import CreateChannel from "./CreateChannel";
 import CreateRoom from "./CreateRoom";
+import Choose from "./choose";
+import Login from "./login";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Main from "./main";
+// import { Switch, Route} from
 
 function App() {
     return (
         <div className="app">
-            <Drawer />
-            <ChannelSettings />
-            {/* <Settings /> */}
-            <CreateChannel />
-            <CreateRoom />
+            <Routes>
+                <Route path='/Login' element={<Login />} />
+                <Route path="/Home" element={<Main />} />
 
-            <MeetingRoom />
-            {/*<ChannelRoom /> */}
+                {/* <ChannelSettings /> */}
+                {/* <Settings /> */}
+                {/* <CreateChannel />
+                    <CreateRoom />
+                    <Choose />
+                    <MeetingRoom />
+                    <ChannelRoom /> */}
+            </Routes>
+
+
         </div>
     );
 }

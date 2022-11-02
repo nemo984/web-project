@@ -67,7 +67,7 @@ const Drawer = () => {
                             ))}
                         </div>
                         <div className="w-full h-24 bg-secondary grid justify-items-stretch">
-                            <label htmlFor="Create-Channel" className="btn justify-self-end bg-Hover">+</label>
+                            <label htmlFor="Create-Channel" className="btn justify-self-end btn-Hover">+</label>
                             <p>FF</p>
                         </div>
                     </ul>
@@ -138,6 +138,7 @@ const Channel = ({ channel }) => {
             <input type="checkbox" />
             <div className="collapse-title text-xl font-medium">
                 <div className="flex justify-between">{channel.name}</div>
+                
             </div>
             <div className="collapse-content">
                 {channel.rooms.map((room, i) => (
