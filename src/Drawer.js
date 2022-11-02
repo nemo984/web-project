@@ -1,33 +1,10 @@
 import React, { useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { joinRoom } from "./features/room/roomSlice";
 
 const Drawer = () => {
     // get from api
-    const [channels, setChannels] = useState([
-        {
-            name: "Web Programming",
-            rooms: [{ name: "Default" }, { name: "AFK" }],
-        },
-        {
-            name: "Artificial Unintelligent",
-            rooms: [
-                { name: "Default" },
-                { name: "AFK" },
-                { name: "Freestyle" },
-            ],
-        },
-        {
-            name: "Advanced Wallpaper Design",
-            rooms: [],
-        },
-        {
-            name: "Shirt",
-            rooms: [
-                {
-                    name: "Default",
-                },
-            ],
-        },
-    ]);
+    const channels = useSelector((state) => state.channels.value);
 
     return (
         <>
@@ -151,8 +128,10 @@ const Channel = ({ channel }) => {
 };
 
 const Room = ({ room }) => {
+    const dispatch = useDispatch();
+
     return (
-        <li>
+        <li onClick={() => dispatch(joinRoom())}>
             <div className="flex justify-between">
                 <div className="indicator">
                     <span className="indicator-item badge badge-secondary">
@@ -160,7 +139,10 @@ const Room = ({ room }) => {
                     </span>
                     {room.name}
                 </div>
-                <button className="btn btn-square btn-ghost">
+                <button
+                    className="btn btn-square btn-ghost"
+                    onClick={(e) => e.stopPropagation()}
+                >
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
                         fill="none"

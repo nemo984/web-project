@@ -2,8 +2,13 @@ import { useRef } from "react";
 import { useState } from "react";
 import { FullScreen, useFullScreenHandle } from "react-full-screen";
 import { Counter } from "./features/counter/Counter";
+import { useSelector, useDispatch } from "react-redux";
+import { leaveRoom } from "./features/room/roomSlice";
 
 const MeetingRoom = () => {
+    const roomName = useSelector((state) => state.room.name);
+    const isInRoom = useSelector((state) => state.room.loading);
+
     const handleFullScreen = useFullScreenHandle();
     const myVideoRef = useRef();
 
@@ -23,30 +28,34 @@ const MeetingRoom = () => {
 
     return (
         <div className="h-screen w-full bg-slate-100 overflow-hidden">
-            <FullScreen handle={handleFullScreen} className="h-full">
-                <Counter />
-                <div className="mt-5 flex flex-wrap content-start overflow-auto h-5/6 relative">
-                    <Pinned />
-                    {participants.map((participant, i) => (
+            {isInRoom !== "idle" && (
+                <FullScreen handle={handleFullScreen} className="h-full">
+                    <Counter />
+                    <div className="mt-5 flex flex-wrap content-start overflow-x-auto h-5/6">
+                        {roomName}
+                        {isInRoom}
+                        <Pinned />
+                        {participants.map((participant, i) => (
+                            <Participant
+                                key={i}
+                                participant={participant}
+                                showAvatar={i % 2}
+                            />
+                        ))}
                         <Participant
-                            key={i}
-                            participant={participant}
-                            showAvatar={i % 2}
+                            participant={you}
+                            showAvatar
+                            videoRef={myVideoRef}
+                            me
+                            className="sticky self-start bottom-0 right-0"
                         />
-                    ))}
-                    <Participant
-                        participant={you}
-                        showAvatar
-                        videoRef={myVideoRef}
-                        me
-                        className="absolute bottom-0 right-0"
+                    </div>
+                    <Footer
+                        handleFullScreen={handleFullScreen}
+                        myVideoRef={myVideoRef}
                     />
-                </div>
-                <Footer
-                    handleFullScreen={handleFullScreen}
-                    myVideoRef={myVideoRef}
-                />
-            </FullScreen>
+                </FullScreen>
+            )}
         </div>
     );
 };
@@ -138,6 +147,7 @@ const Pinned = () => {
 };
 
 const Footer = ({ handleFullScreen, myVideoRef }) => {
+    const dispatch = useDispatch();
     const [isSharing, setIsSharing] = useState(false);
 
     const shareScreen = async () => {
@@ -366,7 +376,10 @@ const Footer = ({ handleFullScreen, myVideoRef }) => {
                         </svg>
                     )}
                 </button>
-                <button className="btn bg-red-500">
+                <button
+                    className="btn bg-red-500"
+                    onClick={() => dispatch(leaveRoom({ payload: "lll" }))}
+                >
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
                         className="icon icon-tabler icon-tabler-logout"
