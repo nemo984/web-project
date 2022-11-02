@@ -1,8 +1,11 @@
+import { useRef } from "react";
 import { useState } from "react";
 import { FullScreen, useFullScreenHandle } from "react-full-screen";
+import { Counter } from "./features/counter/Counter";
 
 const MeetingRoom = () => {
     const handleFullScreen = useFullScreenHandle();
+    const myVideoRef = useRef();
 
     // TODO: context or redux?
     const [participants, setParticipants] = useState([
@@ -16,10 +19,14 @@ const MeetingRoom = () => {
         { fullName: "Gpp g", initials: "Af" },
     ]);
 
+    const you = { fullName: "It's you", initials: "IU" };
+
     return (
         <div className="h-screen w-full bg-slate-100 overflow-hidden">
             <FullScreen handle={handleFullScreen} className="h-full">
-                <div className="mt-10 flex flex-wrap content-start overflow-auto  h-5/6">
+                <Counter />
+                <div className="mt-5 flex flex-wrap content-start overflow-auto h-5/6 relative">
+                    <Pinned />
                     {participants.map((participant, i) => (
                         <Participant
                             key={i}
@@ -27,16 +34,35 @@ const MeetingRoom = () => {
                             showAvatar={i % 2}
                         />
                     ))}
+                    <Participant
+                        participant={you}
+                        showAvatar
+                        videoRef={myVideoRef}
+                        me
+                        className="absolute bottom-0 right-0"
+                    />
                 </div>
-                <Footer handleFullScreen={handleFullScreen} />
+                <Footer
+                    handleFullScreen={handleFullScreen}
+                    myVideoRef={myVideoRef}
+                />
             </FullScreen>
         </div>
     );
 };
 
-const Participant = ({ participant, showAvatar }) => {
+const Participant = ({ participant, showAvatar, videoRef, me }) => {
+    const [isHovering, setIsHovering] = useState(false);
+
     return (
-        <div className="m-2 h-64 w-80 bg-neutral flex items-center justify-center border-8 border-lime-400 rounded-3xl">
+        <div
+            className={
+                "m-2 h-64 w-80 bg-neutral flex items-center justify-center border-8 border-lime-400 rounded-3xl " +
+                (me ? "absolute bottom-0 right-0" : "relative")
+            }
+            onMouseOver={() => setIsHovering(true)}
+            onMouseOut={() => setIsHovering(false)}
+        >
             {showAvatar ? (
                 <div className="avatar placeholder">
                     <div className="bg-neutral-focus text-neutral-content rounded-full w-24">
@@ -50,6 +76,8 @@ const Participant = ({ participant, showAvatar }) => {
                         id="video"
                         controls="controls"
                         preload="none"
+                        autoPlay
+                        ref={videoRef}
                     >
                         <source
                             id="mp4"
@@ -60,13 +88,67 @@ const Participant = ({ participant, showAvatar }) => {
                     <audio></audio>
                 </>
             )}
+            {isHovering && (
+                <div className="absolute top-0 right-0">
+                    <div className="dropdown dropdown-right">
+                        <label tabIndex={0} className="btn m-1">
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                className="icon icon-tabler icon-tabler-dots cursor-pointer"
+                                width="24"
+                                height="24"
+                                viewBox="0 0 24 24"
+                                color="white"
+                                strokeWidth="2"
+                                stroke="currentColor"
+                                fill="none"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                            >
+                                <path
+                                    stroke="none"
+                                    d="M0 0h24v24H0z"
+                                    fill="none"
+                                ></path>
+                                <circle cx="5" cy="12" r="1"></circle>
+                                <circle cx="12" cy="12" r="1"></circle>
+                                <circle cx="19" cy="12" r="1"></circle>
+                            </svg>
+                        </label>
+                        <ul
+                            tabIndex={0}
+                            className="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52"
+                        >
+                            <li>
+                                <a>Pin</a>
+                            </li>
+                            <li>
+                                <a>Kick</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };
 
-const Footer = ({ handleFullScreen }) => {
-    const shareScreen = () => {
-        navigator.mediaDevices.getDisplayMedia();
+const Pinned = () => {
+    return <div className="m-2 w-full bg-primary">Pray</div>;
+};
+
+const Footer = ({ handleFullScreen, myVideoRef }) => {
+    const [isSharing, setIsSharing] = useState(false);
+
+    const shareScreen = async () => {
+        if (navigator.mediaDevices.getDisplayMedia) {
+            let stream = await navigator.mediaDevices.getDisplayMedia({
+                audio: true,
+                video: true,
+            });
+            myVideoRef.current.srcObject = stream;
+            setIsSharing(true);
+        }
     };
 
     return (
@@ -169,30 +251,56 @@ const Footer = ({ handleFullScreen }) => {
                     </svg>
                 </label>
                 <button className="btn" onClick={shareScreen}>
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="icon icon-tabler icon-tabler-screen-share"
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        strokeWidth="2"
-                        stroke="currentColor"
-                        fill="none"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                    >
-                        <path
-                            stroke="none"
-                            d="M0 0h24v24H0z"
+                    {!isSharing ? (
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="icon icon-tabler icon-tabler-screen-share"
+                            width="24"
+                            height="24"
+                            viewBox="0 0 24 24"
+                            strokeWidth="2"
+                            stroke="currentColor"
                             fill="none"
-                        ></path>
-                        <path d="M21 12v3a1 1 0 0 1 -1 1h-16a1 1 0 0 1 -1 -1v-10a1 1 0 0 1 1 -1h9"></path>
-                        <line x1="7" y1="20" x2="17" y2="20"></line>
-                        <line x1="9" y1="16" x2="9" y2="20"></line>
-                        <line x1="15" y1="16" x2="15" y2="20"></line>
-                        <path d="M17 4h4v4"></path>
-                        <path d="M16 9l5 -5"></path>
-                    </svg>
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                        >
+                            <path
+                                stroke="none"
+                                d="M0 0h24v24H0z"
+                                fill="none"
+                            ></path>
+                            <path d="M21 12v3a1 1 0 0 1 -1 1h-16a1 1 0 0 1 -1 -1v-10a1 1 0 0 1 1 -1h9"></path>
+                            <line x1="7" y1="20" x2="17" y2="20"></line>
+                            <line x1="9" y1="16" x2="9" y2="20"></line>
+                            <line x1="15" y1="16" x2="15" y2="20"></line>
+                            <path d="M17 4h4v4"></path>
+                            <path d="M16 9l5 -5"></path>
+                        </svg>
+                    ) : (
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="icon icon-tabler icon-tabler-screen-share-off"
+                            width="24"
+                            height="24"
+                            viewBox="0 0 24 24"
+                            strokeWidth="2"
+                            stroke="currentColor"
+                            fill="none"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                        >
+                            <path
+                                stroke="none"
+                                d="M0 0h24v24H0z"
+                                fill="none"
+                            ></path>
+                            <path d="M21 12v3a1 1 0 0 1 -1 1h-16a1 1 0 0 1 -1 -1v-10a1 1 0 0 1 1 -1h9"></path>
+                            <line x1="7" y1="20" x2="17" y2="20"></line>
+                            <line x1="9" y1="16" x2="9" y2="20"></line>
+                            <line x1="15" y1="16" x2="15" y2="20"></line>
+                            <path d="M17 8l4 -4m-4 0l4 4"></path>
+                        </svg>
+                    )}
                 </button>
                 <button
                     className="btn"
