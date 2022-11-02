@@ -1,0 +1,33 @@
+.react-tabs {
+    display: flex;
+    width: 470px;
+    height: 100%;
+    color: white;
+    background: white;
+}
+
+.react-tabs__tab {
+    height: 70px;
+    list-style: none;
+    cursor: pointer;
+    color: #bbb;
+}
+
+.react-tabs__tab--selected {
+    background: #69696a;
+    color: white;
+}
+
+.react-tabs__tab-panel {
+    display: none;
+    width: 800rem;
+    color: #1c1d1f;
+}
+
+.react-tabs__tab-panel--selected {
+    display: block;
+}
+
+.panel-content {
+    text-align: center;
+}
