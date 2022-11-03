@@ -4,38 +4,80 @@ import { FullScreen, useFullScreenHandle } from "react-full-screen";
 import { Counter } from "./features/counter/Counter";
 import { useSelector, useDispatch } from "react-redux";
 import { leaveRoom } from "./features/room/roomSlice";
+import { useRoom, useParticipant } from "@livekit/react-core";
+import { useEffect } from "react";
+
+// env or sth.
+const url = "ws://localhost:7880";
 
 const MeetingRoom = () => {
-    const roomName = useSelector((state) => state.room.name);
+    const roomName = useSelector((state) => state.room.roomId);
+    const roomToken = useSelector((state) => state.room.roomToken);
     const isInRoom = useSelector((state) => state.room.loading);
+    const participantsName = useSelector((state) => state.room.participants);
+
+    const audioInputDeviceId = useSelector(
+        (state) => state.user.audioInputDeviceId
+    );
+    const audioOutputDeviceId = useSelector(
+        (state) => state.user.audioOutputDeviceId
+    );
+    const videoInputDeviceId = useSelector(
+        (state) => state.user.videoInputDeviceId
+    );
+
+    const roomOptions = {
+        adaptiveStream: true,
+        dynacast: true,
+    };
+    const { connect, isConnecting, room, error, participants, audioTracks } =
+        useRoom(roomOptions);
+
+    const init = async () => {
+        await connect(url, roomToken);
+        await room.localParticipant.enableCameraAndMicrophone();
+    };
+
+    useEffect(() => {
+        init().catch(console.error);
+    }, [roomToken]);
+
+    // change audio input
+    useEffect(() => {
+        //  room.localParticipant("audioinput", audioInputDeviceId);
+        console.log(audioInputDeviceId);
+    }, [audioInputDeviceId]);
+
+    // change audio output
+    useEffect(() => {
+        //  room.localParticipant("audioinput", audioInputDeviceId);
+        console.log(audioOutputDeviceId);
+    }, [audioOutputDeviceId]);
+
+    // change video
+    useEffect(() => {
+        //  room.localParticipant("audioinput", audioInputDeviceId);
+        console.log(videoInputDeviceId);
+    }, [videoInputDeviceId]);
 
     const handleFullScreen = useFullScreenHandle();
     const myVideoRef = useRef();
-
-    // TODO: context or redux?
-    const [participants, setParticipants] = useState([
-        {
-            fullName: "Rick Ashley",
-            initials: "RA",
-        },
-        { fullName: "Gpp g", initials: "GG" },
-        { fullName: "Gpp g", initials: "AFK" },
-        { fullName: "Gpp g", initials: "BOY" },
-        { fullName: "Gpp g", initials: "Af" },
-    ]);
 
     const you = { fullName: "It's you", initials: "IU" };
 
     return (
         <div className="h-screen w-full bg-slate-100 overflow-hidden">
             {isInRoom !== "idle" && (
-                <FullScreen handle={handleFullScreen} className="h-full">
+                <FullScreen
+                    handle={handleFullScreen}
+                    className="h-full relative"
+                >
                     <Counter />
                     <div className="mt-5 flex flex-wrap content-start overflow-x-auto h-5/6">
                         {roomName}
                         {isInRoom}
                         <Pinned />
-                        {participants.map((participant, i) => (
+                        {participantsName.map((participant, i) => (
                             <Participant
                                 key={i}
                                 participant={participant}
@@ -47,7 +89,7 @@ const MeetingRoom = () => {
                             showAvatar
                             videoRef={myVideoRef}
                             me
-                            className="sticky self-start bottom-0 right-0"
+                            className="absolute self-start bottom-0 right-0"
                         />
                     </div>
                     <Footer
@@ -85,7 +127,6 @@ const Participant = ({ participant, showAvatar, videoRef, me }) => {
                         id="video"
                         controls="controls"
                         preload="none"
-                        autoPlay
                         ref={videoRef}
                     >
                         <source
@@ -97,6 +138,10 @@ const Participant = ({ participant, showAvatar, videoRef, me }) => {
                     <audio></audio>
                 </>
             )}
+            <div className="absolute bottom-4 left-3 text-secondary">
+                {participant.fullName}
+            </div>
+
             {isHovering && (
                 <div className="absolute top-0 right-0">
                     <div className="dropdown dropdown-right">

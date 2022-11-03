@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { joinRoom } from "./features/room/roomSlice";
+import { useNavigate } from "react-router-dom";
 
 const Drawer = () => {
     // get from api
@@ -61,6 +62,12 @@ const Drawer = () => {
 
 //TODO: put components into each js file
 const Profile = () => {
+    const navigate = useNavigate();
+
+    const handleLogout = () => {
+        navigate("/login");
+    };
+
     return (
         <div className="dropdown mb-3">
             <label tabIndex={0} className="btn btn-ghost btn-circle avatar">
@@ -73,15 +80,9 @@ const Profile = () => {
                 className="mt-3 p-2 shadow menu menu-compact dropdown-content bg-base-100 rounded-box w-52"
             >
                 <li>
-                    <a className="justify-between">
-                        Profile
-                        <span className="badge">New</span>
-                    </a>
-                </li>
-                <li>
                     <label htmlFor="my-setting">Settings</label>
                 </li>
-                <li>
+                <li onClick={handleLogout}>
                     <a>Logout</a>
                 </li>
             </ul>
@@ -98,7 +99,6 @@ const Channel = ({ channel }) => {
             <input type="checkbox" />
             <div className="collapse-title text-xl font-medium">
                 <div className="flex justify-between">{channel.name}</div>
-                
             </div>
 
             <label htmlFor="channel-settings" className="inline-block">

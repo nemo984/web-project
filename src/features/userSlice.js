@@ -4,30 +4,29 @@ export const userSlice = createSlice({
     name: "user",
     initialState: {
         username: "John",
-        inputDevice: "",
-        outputDevice: "",
-        cameraDevice: "",
+        audioInputDeviceId: "",
+        audioOutputDeviceId: "",
+        videoInputDeviceId: "",
         inputVolume: "",
         outputVolume: "",
     },
     reducers: {
-        increment: (state) => {
-            // Redux Toolkit allows us to write "mutating" logic in reducers. It
-            // doesn't actually mutate the state because it uses the Immer library,
-            // which detects changes to a "draft state" and produces a brand new
-            // immutable state based off those changes
-            state.value += 1;
+        setAudioInputDeviceId: (state, action) => {
+            state.audioInputDeviceId = action.payload;
         },
-        decrement: (state) => {
-            state.value -= 1;
+        setAudioOutputDeviceId: (state, action) => {
+            state.audioOutputDeviceId = action.payload;
         },
-        incrementByAmount: (state, action) => {
-            state.value += action.payload;
+        setVideoInputDeviceId: (state, action) => {
+            state.videoInputDeviceId = action.payload;
         },
     },
 });
 
-// Action creators are generated for each case reducer function
-export const { increment, decrement, incrementByAmount } = userSlice.actions;
+export const {
+    setAudioInputDeviceId,
+    setAudioOutputDeviceId,
+    setVideoInputDeviceId,
+} = userSlice.actions;
 
 export default userSlice.reducer;
