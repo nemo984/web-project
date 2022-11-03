@@ -1,6 +1,24 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { Room } from "livekit-client";
 
 const Settings = () => {
+    const [audioInputDevices, setAudioInputDevices] = useState([]);
+    const [audioOutputDevices, setAudioOutputDevices] = useState([]);
+    const [videoInputDevices, setVideoInputDevices] = useState([]);
+
+    useEffect(() => {
+        Room.getLocalDevices("audioinput").then((value) => {
+            setAudioInputDevices(value);
+        });
+        Room.getLocalDevices("audiooutput").then((value) => {
+            setAudioOutputDevices(value);
+            console.log(value);
+        });
+        Room.getLocalDevices("videoinput").then((value) => {
+            setVideoInputDevices(value);
+        });
+    }, []);
+
     return (
         <>
             <input type="checkbox" id="my-setting" className="modal-toggle" />
@@ -12,18 +30,22 @@ const Settings = () => {
                         <option disabled selected>
                             Pick your input device
                         </option>
-                        <option>Default</option>
-                        <option>Microphone1</option>
-                        <option>Microphone2</option>
+                        {audioInputDevices.map((device, i) => (
+                            <option key={i} selected={i === 0}>
+                                {device.label}
+                            </option>
+                        ))}
                     </select>
                     <h3 className="font-bold text-lg">Output device</h3>
                     <select className="select w-full max-w-xs">
                         <option disabled selected>
                             Pick your output device
                         </option>
-                        <option>Default</option>
-                        <option>Speaker1</option>
-                        <option>Speaker2</option>
+                        {audioOutputDevices.map((device, i) => (
+                            <option key={i} selected={i === 0}>
+                                {device.label}
+                            </option>
+                        ))}
                     </select>
                     <h3 className="font-bold text-lg">Input volume</h3>
                     <input type="range" min="0" max="100" className="range" />
@@ -34,9 +56,11 @@ const Settings = () => {
                         <option disabled selected>
                             Pick your camera
                         </option>
-                        <option>Default</option>
-                        <option>Camera1</option>
-                        <option>Camera2</option>
+                        {videoInputDevices.map((device, i) => (
+                            <option key={i} selected={i === 0}>
+                                {device.label}
+                            </option>
+                        ))}
                     </select>
                     <h3 className="font-bold text-lg">Virtual background</h3>
                     <select className="select w-full max-w-xs">
