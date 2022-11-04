@@ -33,7 +33,40 @@ const ChannelSettings = () => {
                         </TabList>
                         <TabPanel>
                             <div className="panel-content">
-                                <h2>Any content 1</h2>
+                                <h2>
+                                    <div>Channel name</div>
+                                    <div>
+                                        <input
+                                            type="text"
+                                            placeholder="Type here"
+                                            className="input input-bordered w-full max-w-xs"
+                                        />
+                                        <button className="btn">change</button>
+                                    </div>
+                                    <br />
+                                    <div>Slow mode</div>
+                                    <input
+                                        type="range"
+                                        min="0"
+                                        max="10"
+                                        className="range"
+                                        step="2"
+                                    />
+                                    <div className="w-full flex justify-between text-xs px-2">
+                                        <span>0</span>
+                                        <span>2</span>
+                                        <span>4</span>
+                                        <span>6</span>
+                                        <span>8</span>
+                                        <span>10</span>
+                                    </div>
+                                    <br />
+                                    <div>
+                                        <button className="btn btn-ghost btn-xs">
+                                            Delete channel
+                                        </button>
+                                    </div>
+                                </h2>
                             </div>
                         </TabPanel>
                         <TabPanel>

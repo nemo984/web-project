@@ -6,6 +6,8 @@ import {
     setVideoInputDeviceId,
 } from "./features/userSlice";
 import { useDispatch } from "react-redux";
+import "react-tabs/style/react-tabs.css";
+import { Tab, TabList, TabPanel, Tabs } from "react-tabs";
 
 const Settings = () => {
     const dispatch = useDispatch();
@@ -31,80 +33,114 @@ const Settings = () => {
             <input type="checkbox" id="my-setting" className="modal-toggle" />
             <div className="modal">
                 <div className="modal-box">
-                    <h3 className="font-bold text-4xl text-lg">Setting</h3>
-                    <h3 className="font-bold text-lg">Input device</h3>
-                    <select
-                        className="select w-full max-w-xs"
-                        onChange={(e) =>
-                            dispatch(setAudioInputDeviceId(e.target.value))
-                        }
+                    <label
+                        htmlFor="my-setting"
+                        className="btn btn-sm btn-circle absolute right-2 top-2"
                     >
-                        <option disabled selected>
-                            Pick your input device
-                        </option>
-                        {audioInputDevices.map((device, i) => (
-                            <option
-                                key={i}
-                                selected={i === 0}
-                                value={device.deviceId}
+                        ✕
+                    </label>
+                    <Tabs>
+                        <TabList>
+                            <Tab>
+                                <p>Audio</p>
+                            </Tab>
+                            <Tab>
+                                <p>Video</p>
+                            </Tab>
+                        </TabList>
+                        <TabPanel>
+                            <div className="panel-content">
+                                <h3 className="font-bold text-lg">
+                                    Input device
+                                </h3>
+                                <select
+                                    className="select w-full max-w-xs"
+                                    onChange={(e) =>
+                                        dispatch(
+                                            setAudioInputDeviceId(
+                                                e.target.value
+                                            )
+                                        )
+                                    }
+                                >
+                                    <option disabled selected>
+                                        Pick your input device
+                                    </option>
+                                    {audioInputDevices.map((device, i) => (
+                                        <option
+                                            key={i}
+                                            selected={i === 0}
+                                            value={device.deviceId}
+                                        >
+                                            {device.label}
+                                        </option>
+                                    ))}
+                                </select>
+                                <h3 className="font-bold text-lg">
+                                    Output device
+                                </h3>
+                                <select
+                                    className="select w-full max-w-xs"
+                                    onChange={(e) =>
+                                        dispatch(
+                                            setAudioOutputDeviceId(
+                                                e.target.value
+                                            )
+                                        )
+                                    }
+                                >
+                                    <option disabled selected>
+                                        Pick your output device
+                                    </option>
+                                    {audioOutputDevices.map((device, i) => (
+                                        <option
+                                            key={i}
+                                            selected={i === 0}
+                                            value={device.deviceId}
+                                        >
+                                            {device.label}
+                                        </option>
+                                    ))}
+                                </select>
+                            </div>
+                        </TabPanel>
+                        <TabPanel>
+                            <h3 className="font-bold text-lg">Camera</h3>
+                            <select
+                                className="select w-full max-w-xs"
+                                onChange={(e) =>
+                                    dispatch(
+                                        setVideoInputDeviceId(e.target.value)
+                                    )
+                                }
                             >
-                                {device.label}
-                            </option>
-                        ))}
-                    </select>
-                    <h3 className="font-bold text-lg">Output device</h3>
-                    <select
-                        className="select w-full max-w-xs"
-                        onChange={(e) =>
-                            dispatch(setAudioOutputDeviceId(e.target.value))
-                        }
-                    >
-                        <option disabled selected>
-                            Pick your output device
-                        </option>
-                        {audioOutputDevices.map((device, i) => (
-                            <option
-                                key={i}
-                                selected={i === 0}
-                                value={device.deviceId}
-                            >
-                                {device.label}
-                            </option>
-                        ))}
-                    </select>
-                    <h3 className="font-bold text-lg">Input volume</h3>
-                    <input type="range" min="0" max="100" className="range" />
-                    <h3 className="font-bold text-lg">Output volume</h3>
-                    <input type="range" min="0" max="100" className="range" />
-                    <h3 className="font-bold text-lg">Camera</h3>
-                    <select
-                        className="select w-full max-w-xs"
-                        onChange={(e) =>
-                            dispatch(setVideoInputDeviceId(e.target.value))
-                        }
-                    >
-                        <option disabled selected>
-                            Pick your camera
-                        </option>
-                        {videoInputDevices.map((device, i) => (
-                            <option
-                                key={i}
-                                selected={i === 0}
-                                value={device.deviceId}
-                            >
-                                {device.label}
-                            </option>
-                        ))}
-                    </select>
-                    <h3 className="font-bold text-lg">Virtual background</h3>
-                    <select className="select w-full max-w-xs">
-                        <option disabled selected>
-                            Pick your camera
-                        </option>
-                        <option>Default</option>
-                        <option>1</option>
-                        <option>2</option>
-                    </select>
+                                <option disabled selected>
+                                    Pick your camera
+                                </option>
+                                {videoInputDevices.map((device, i) => (
+                                    <option
+                                        key={i}
+                                        selected={i === 0}
+                                        value={device.deviceId}
+                                    >
+                                        {device.label}
+                                    </option>
+                                ))}
+                            </select>
+                            <h3 className="font-bold text-lg">
+                                Virtual background
+                            </h3>
+                            <select className="select w-full max-w-xs">
+                                <option disabled selected>
+                                    Pick your camera
+                                </option>
+                                <option>Default</option>
+                                <option>1</option>
+                                <option>2</option>
+                            </select>
+                        </TabPanel>
+                    </Tabs>
+
                     <div className="modal-action">
                         <label htmlFor="my-setting" className="btn">
                             Close
