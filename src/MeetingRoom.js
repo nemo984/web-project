@@ -127,19 +127,29 @@ const Participant = ({ participant, showAvatar, videoRef, me }) => {
     );
 };
 
-const Pinned = () => {
-    return <div className="m-2 w-full bg-primary">Pray</div>;
-};
-
 const Footer = ({ handleFullScreen, room }) => {
     const dispatch = useDispatch();
-    const [isSharing, setIsSharing] = useState(false);
 
-    const shareScreen = async () => {
-        await room.localParticipant.setScreenShareEnabled(true);
+    const toggleShareScreen = async () => {
+        await room.localParticipant.setScreenShareEnabled(
+            !room.localParticipant.isScreenShareEnabled
+        );
     };
 
-    const leaveRoom = () => {
+    const toggleMicrophone = async () => {
+        console.log("trying to mute");
+        await room.localParticipant.setMicrophoneEnabled(
+            !room.localParticipant.isMicrophoneEnabled
+        );
+    };
+
+    const toggleCamera = async () => {
+        await room.localParticipant.setCameraEnabled(
+            !room.localParticipant.isCameraEnabled
+        );
+    };
+
+    const handleLeaveRoom = () => {
         room.disconnect();
         dispatch(leaveRoom({ payload: "lll" }));
     };
@@ -147,104 +157,116 @@ const Footer = ({ handleFullScreen, room }) => {
     return (
         <div className="flex justify-center mt-5 p-5 bg-slate-600 w-full h-full">
             <div className="btn-group">
-                <label className="btn swap">
-                    <input type="checkbox" />
-
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="swap-on fill-current icon icon-tabler icon-tabler-microphone"
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        strokeWidth="2"
-                        stroke="currentColor"
-                        fill="none"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                    >
-                        <path
-                            stroke="none"
-                            d="M0 0h24v24H0z"
+                <button className="btn" onClick={toggleMicrophone}>
+                    {room.localParticipant.isMicrophoneEnabled ? (
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="swap-on fill-current icon icon-tabler icon-tabler-microphone"
+                            width="24"
+                            height="24"
+                            viewBox="0 0 24 24"
+                            strokeWidth="2"
+                            stroke="currentColor"
                             fill="none"
-                        ></path>
-                        <rect x="9" y="2" width="6" height="11" rx="3"></rect>
-                        <path d="M5 10a7 7 0 0 0 14 0"></path>
-                        <line x1="8" y1="21" x2="16" y2="21"></line>
-                        <line x1="12" y1="17" x2="12" y2="21"></line>
-                    </svg>
-
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="swap-off fill-current icon icon-tabler icon-tabler-microphone-off"
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        strokeWidth="2"
-                        stroke="currentColor"
-                        fill="none"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                    >
-                        <path
-                            stroke="none"
-                            d="M0 0h24v24H0z"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                        >
+                            <path
+                                stroke="none"
+                                d="M0 0h24v24H0z"
+                                fill="none"
+                            ></path>
+                            <rect
+                                x="9"
+                                y="2"
+                                width="6"
+                                height="11"
+                                rx="3"
+                            ></rect>
+                            <path d="M5 10a7 7 0 0 0 14 0"></path>
+                            <line x1="8" y1="21" x2="16" y2="21"></line>
+                            <line x1="12" y1="17" x2="12" y2="21"></line>
+                        </svg>
+                    ) : (
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="swap-off fill-current icon icon-tabler icon-tabler-microphone-off"
+                            width="24"
+                            height="24"
+                            viewBox="0 0 24 24"
+                            strokeWidth="2"
+                            stroke="currentColor"
                             fill="none"
-                        ></path>
-                        <line x1="3" y1="3" x2="21" y2="21"></line>
-                        <path d="M9 5a3 3 0 0 1 6 0v5a3 3 0 0 1 -.13 .874m-2 2a3 3 0 0 1 -3.87 -2.872v-1"></path>
-                        <path d="M5 10a7 7 0 0 0 10.846 5.85m2.002 -2a6.967 6.967 0 0 0 1.152 -3.85"></path>
-                        <line x1="8" y1="21" x2="16" y2="21"></line>
-                        <line x1="12" y1="17" x2="12" y2="21"></line>
-                    </svg>
-                </label>
-                <label className="btn swap">
-                    <input type="checkbox" />
-
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="swap-on fill-current icon icon-tabler icon-tabler-video"
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        strokeWidth="2"
-                        stroke="currentColor"
-                        fill="none"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                    >
-                        <path
-                            stroke="none"
-                            d="M0 0h24v24H0z"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                        >
+                            <path
+                                stroke="none"
+                                d="M0 0h24v24H0z"
+                                fill="none"
+                            ></path>
+                            <line x1="3" y1="3" x2="21" y2="21"></line>
+                            <path d="M9 5a3 3 0 0 1 6 0v5a3 3 0 0 1 -.13 .874m-2 2a3 3 0 0 1 -3.87 -2.872v-1"></path>
+                            <path d="M5 10a7 7 0 0 0 10.846 5.85m2.002 -2a6.967 6.967 0 0 0 1.152 -3.85"></path>
+                            <line x1="8" y1="21" x2="16" y2="21"></line>
+                            <line x1="12" y1="17" x2="12" y2="21"></line>
+                        </svg>
+                    )}
+                </button>
+                <button className="btn" onClick={toggleCamera}>
+                    {room.localParticipant.isCameraEnabled ? (
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="swap-on fill-current icon icon-tabler icon-tabler-video"
+                            width="24"
+                            height="24"
+                            viewBox="0 0 24 24"
+                            strokeWidth="2"
+                            stroke="currentColor"
                             fill="none"
-                        ></path>
-                        <path d="M15 10l4.553 -2.276a1 1 0 0 1 1.447 .894v6.764a1 1 0 0 1 -1.447 .894l-4.553 -2.276v-4z"></path>
-                        <rect x="3" y="6" width="12" height="12" rx="2"></rect>
-                    </svg>
-
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="swap-off fill-current icon icon-tabler icon-tabler-video-off"
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        strokeWidth="2"
-                        stroke="currentColor"
-                        fill="none"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                    >
-                        <path
-                            stroke="none"
-                            d="M0 0h24v24H0z"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                        >
+                            <path
+                                stroke="none"
+                                d="M0 0h24v24H0z"
+                                fill="none"
+                            ></path>
+                            <path d="M15 10l4.553 -2.276a1 1 0 0 1 1.447 .894v6.764a1 1 0 0 1 -1.447 .894l-4.553 -2.276v-4z"></path>
+                            <rect
+                                x="3"
+                                y="6"
+                                width="12"
+                                height="12"
+                                rx="2"
+                            ></rect>
+                        </svg>
+                    ) : (
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="swap-off fill-current icon icon-tabler icon-tabler-video-off"
+                            width="24"
+                            height="24"
+                            viewBox="0 0 24 24"
+                            strokeWidth="2"
+                            stroke="currentColor"
                             fill="none"
-                        ></path>
-                        <line x1="3" y1="3" x2="21" y2="21"></line>
-                        <path d="M15 11v-1l4.553 -2.276a1 1 0 0 1 1.447 .894v6.764a1 1 0 0 1 -.675 .946"></path>
-                        <path d="M10 6h3a2 2 0 0 1 2 2v3m0 4v1a2 2 0 0 1 -2 2h-8a2 2 0 0 1 -2 -2v-8a2 2 0 0 1 2 -2h1"></path>
-                    </svg>
-                </label>
-                <button className="btn" onClick={shareScreen}>
-                    {!isSharing ? (
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                        >
+                            <path
+                                stroke="none"
+                                d="M0 0h24v24H0z"
+                                fill="none"
+                            ></path>
+                            <line x1="3" y1="3" x2="21" y2="21"></line>
+                            <path d="M15 11v-1l4.553 -2.276a1 1 0 0 1 1.447 .894v6.764a1 1 0 0 1 -.675 .946"></path>
+                            <path d="M10 6h3a2 2 0 0 1 2 2v3m0 4v1a2 2 0 0 1 -2 2h-8a2 2 0 0 1 -2 -2v-8a2 2 0 0 1 2 -2h1"></path>
+                        </svg>
+                    )}
+                </button>
+                <button className="btn" onClick={toggleShareScreen}>
+                    {!room.localParticipant.isScreenShareEnabled ? (
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
                             className="icon icon-tabler icon-tabler-screen-share"
@@ -359,7 +381,7 @@ const Footer = ({ handleFullScreen, room }) => {
                         </svg>
                     )}
                 </button>
-                <button className="btn bg-red-500" onClick={leaveRoom}>
+                <button className="btn bg-red-500" onClick={handleLeaveRoom}>
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
                         className="icon icon-tabler icon-tabler-logout"
@@ -425,12 +447,13 @@ export const RoomPage = ({ token, handleFullScreen }) => {
         await room.localParticipant.setCameraEnabled(true);
         await room.localParticipant.setMicrophoneEnabled(true);
     }
+
     return (
         <div className="roomContainer">
             <LiveKitRoom
                 url={url}
                 token={token}
-                onConnected={(room) => onConnected(room)}
+                onConnected={onConnected}
                 // controlRenderer renders the control bar
                 controlRenderer={(props) => {
                     return (

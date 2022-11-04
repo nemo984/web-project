@@ -33,25 +33,19 @@ const Drawer = () => {
                         className="menu p-4 overflow-y-auto 
  bg-base-100 text-base-content bg-primary flex flex-col justify-between"
                     >
-                        <div>
+                        <div className="mt-5">
                             <Profile />
-                            <input
-                                type="text"
-                                placeholder="Search Room or Channel"
-                                className="input input-bordered w-full"
-                            />
                             {channels.map((channel, i) => (
                                 <Channel key={i} channel={channel} />
                             ))}
                         </div>
-                        <div className="w-full h-24 bg-secondary grid justify-items-stretch">
+                        <div className="w-full h-24 bg-transparent grid justify-items-stretch">
                             <label
                                 htmlFor="Create-Channel"
                                 className="btn justify-self-end bg-Hover"
                             >
                                 +
                             </label>
-                            <p>FF</p>
                         </div>
                     </ul>
                 </div>
@@ -70,9 +64,16 @@ const Profile = () => {
 
     return (
         <div className="dropdown mb-3">
-            <label tabIndex={0} className="btn btn-ghost btn-circle avatar">
-                <div className="w-full rounded-full">
-                    <img src="https://placeimg.com/80/80/people" />
+            <label
+                tabIndex={0}
+                className="btn btn-ghost btn-circle avatar w-full h-full ring ring-primary ring-offset-base-100 ring-offset-2"
+            >
+                <div className="w-16 rounded-full">
+                    <img
+                        src="https://placeimg.com/80/80/people"
+                        alt="profile pic"
+                        className="h-full w-full"
+                    />
                 </div>
             </label>
             <ul
