@@ -1,64 +1,22 @@
 import { useRef } from "react";
 import { useState } from "react";
 import { FullScreen, useFullScreenHandle } from "react-full-screen";
-import { Counter } from "./features/counter/Counter";
 import { useSelector, useDispatch } from "react-redux";
 import { leaveRoom } from "./features/room/roomSlice";
 import { useRoom, useParticipant } from "@livekit/react-core";
 import { useEffect } from "react";
 
-// env or sth.
-const url = "ws://localhost:7880";
+import "@livekit/react-components/dist/index.css";
+import "react-aspect-ratio/aspect-ratio.css";
+import { LiveKitRoom } from "@livekit/react-components";
+
+const url = process.env.REACT_APP_LIVEKIT_URL;
 
 const MeetingRoom = () => {
     const roomName = useSelector((state) => state.room.roomId);
     const roomToken = useSelector((state) => state.room.roomToken);
     const isInRoom = useSelector((state) => state.room.loading);
     const participantsName = useSelector((state) => state.room.participants);
-
-    const audioInputDeviceId = useSelector(
-        (state) => state.user.audioInputDeviceId
-    );
-    const audioOutputDeviceId = useSelector(
-        (state) => state.user.audioOutputDeviceId
-    );
-    const videoInputDeviceId = useSelector(
-        (state) => state.user.videoInputDeviceId
-    );
-
-    const roomOptions = {
-        adaptiveStream: true,
-        dynacast: true,
-    };
-    const { connect, isConnecting, room, error, participants, audioTracks } =
-        useRoom(roomOptions);
-
-    const init = async () => {
-        await connect(url, roomToken);
-        await room.localParticipant.enableCameraAndMicrophone();
-    };
-
-    useEffect(() => {
-        init().catch(console.error);
-    }, [roomToken]);
-
-    // change audio input
-    useEffect(() => {
-        //  room.localParticipant("audioinput", audioInputDeviceId);
-        console.log(audioInputDeviceId);
-    }, [audioInputDeviceId]);
-
-    // change audio output
-    useEffect(() => {
-        //  room.localParticipant("audioutput", audioOutputDeviceId);
-        console.log(audioOutputDeviceId);
-    }, [audioOutputDeviceId]);
-
-    // change video
-    useEffect(() => {
-        //  room.localParticipant("videoinput", videoInputDeviceId);
-        console.log(videoInputDeviceId);
-    }, [videoInputDeviceId]);
 
     const handleFullScreen = useFullScreenHandle();
     const myVideoRef = useRef();
@@ -72,30 +30,12 @@ const MeetingRoom = () => {
                     handle={handleFullScreen}
                     className="h-full relative"
                 >
-                    <Counter />
-                    <div className="mt-5 flex flex-wrap content-start overflow-x-auto h-5/6">
-                        {roomName}
-                        {isInRoom}
-                        <Pinned />
-                        {participantsName.map((participant, i) => (
-                            <Participant
-                                key={i}
-                                participant={participant}
-                                showAvatar={i % 2}
-                            />
-                        ))}
-                        <Participant
-                            participant={you}
-                            showAvatar
-                            videoRef={myVideoRef}
-                            me
-                            className="absolute self-start bottom-0 right-0"
+                    <div className="mt-5 h-5/6 w-full">
+                        <RoomPage
+                            token={roomToken} // stageRenderer renders the entire stage
+                            handleFullScreen={handleFullScreen}
                         />
                     </div>
-                    <Footer
-                        handleFullScreen={handleFullScreen}
-                        myVideoRef={myVideoRef}
-                    />
                 </FullScreen>
             )}
         </div>
@@ -191,19 +131,17 @@ const Pinned = () => {
     return <div className="m-2 w-full bg-primary">Pray</div>;
 };
 
-const Footer = ({ handleFullScreen, myVideoRef }) => {
+const Footer = ({ handleFullScreen, room }) => {
     const dispatch = useDispatch();
     const [isSharing, setIsSharing] = useState(false);
 
     const shareScreen = async () => {
-        if (navigator.mediaDevices.getDisplayMedia) {
-            let stream = await navigator.mediaDevices.getDisplayMedia({
-                audio: true,
-                video: true,
-            });
-            myVideoRef.current.srcObject = stream;
-            setIsSharing(true);
-        }
+        await room.localParticipant.setScreenShareEnabled(true);
+    };
+
+    const leaveRoom = () => {
+        room.disconnect();
+        dispatch(leaveRoom({ payload: "lll" }));
     };
 
     return (
@@ -421,10 +359,7 @@ const Footer = ({ handleFullScreen, myVideoRef }) => {
                         </svg>
                     )}
                 </button>
-                <button
-                    className="btn bg-red-500"
-                    onClick={() => dispatch(leaveRoom({ payload: "lll" }))}
-                >
+                <button className="btn bg-red-500" onClick={leaveRoom}>
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
                         className="icon icon-tabler icon-tabler-logout"
@@ -447,6 +382,65 @@ const Footer = ({ handleFullScreen, myVideoRef }) => {
                     </svg>
                 </button>
             </div>
+        </div>
+    );
+};
+
+export const RoomPage = ({ token, handleFullScreen }) => {
+    const audioInputDeviceId = useSelector(
+        (state) => state.user.audioInputDeviceId
+    );
+    const audioOutputDeviceId = useSelector(
+        (state) => state.user.audioOutputDeviceId
+    );
+    const videoInputDeviceId = useSelector(
+        (state) => state.user.videoInputDeviceId
+    );
+
+    // change audio input
+    useEffect(() => {
+        if (audioInputDeviceId !== "") {
+            //  room.localParticipant("audioinput", audioInputDeviceId);
+            console.log(audioInputDeviceId);
+        }
+    }, [audioInputDeviceId]);
+
+    // change audio output
+    useEffect(() => {
+        if (audioOutputDeviceId !== "") {
+            //  room.localParticipant("audioutput", audioOutputDeviceId);
+            console.log(audioOutputDeviceId);
+        }
+    }, [audioOutputDeviceId]);
+
+    // change video
+    useEffect(() => {
+        if (videoInputDeviceId !== "") {
+            //  room.localParticipant("videoinput", videoInputDeviceId);
+            console.log(videoInputDeviceId);
+        }
+    }, [videoInputDeviceId]);
+
+    async function onConnected(room) {
+        await room.localParticipant.setCameraEnabled(true);
+        await room.localParticipant.setMicrophoneEnabled(true);
+    }
+    return (
+        <div className="roomContainer">
+            <LiveKitRoom
+                url={url}
+                token={token}
+                onConnected={(room) => onConnected(room)}
+                // controlRenderer renders the control bar
+                controlRenderer={(props) => {
+                    return (
+                        <Footer
+                            room={props.room}
+                            handleFullScreen={handleFullScreen}
+                        />
+                    );
+                }}
+            />
         </div>
     );
 };
