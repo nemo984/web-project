@@ -50,13 +50,13 @@ const MeetingRoom = () => {
 
     // change audio output
     useEffect(() => {
-        //  room.localParticipant("audioinput", audioInputDeviceId);
+        //  room.localParticipant("audioutput", audioOutputDeviceId);
         console.log(audioOutputDeviceId);
     }, [audioOutputDeviceId]);
 
     // change video
     useEffect(() => {
-        //  room.localParticipant("audioinput", audioInputDeviceId);
+        //  room.localParticipant("videoinput", videoInputDeviceId);
         console.log(videoInputDeviceId);
     }, [videoInputDeviceId]);
 
