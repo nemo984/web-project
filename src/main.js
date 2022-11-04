@@ -2,7 +2,7 @@ import Drawer from "./Drawer";
 import CreateChannel from "./CreateChannel";
 import CreateRoom from "./CreateRoom";
 import MeetingRoom from "./MeetingRoom";
-import ChannelSettings from "./components/ChannelSettings/ChannelSettings";
+import ChannelSettings from "./components/ChannelSettings";
 import Settings from "./Setting";
 
 export function Main() {
