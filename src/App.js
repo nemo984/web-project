@@ -1,5 +1,3 @@
-//import ChannelRoom from "./components/ChannelRoom";
-import "./App.css";
 import Login from "./login";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Main from "./main";
@@ -7,7 +5,7 @@ import Main from "./main";
 function App() {
     return (
         <Routes>
-            <Route index path="/Login" element={<Login />} />
+            <Route index path="/login" element={<Login />} />
             <Route path="/home" element={<Main />}></Route>
         </Routes>
     );
