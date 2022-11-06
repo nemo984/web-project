@@ -3,6 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 export const userSlice = createSlice({
     name: "user",
     initialState: {
+        isLoggedIn: false,
         username: "John",
         audioInputDeviceId: "",
         audioOutputDeviceId: "",

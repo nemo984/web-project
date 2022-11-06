@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { joinRoom } from "./features/room/roomSlice";
+import { googleLogout } from "@react-oauth/google";
 import { useNavigate } from "react-router-dom";
 
 const Drawer = () => {
@@ -59,6 +60,7 @@ const Profile = () => {
     const navigate = useNavigate();
 
     const handleLogout = () => {
+        googleLogout();
         navigate("/login");
     };
 
