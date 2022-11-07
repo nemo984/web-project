@@ -60,6 +60,9 @@ const Profile = () => {
     const navigate = useNavigate();
 
     const handleLogout = () => {
+        // move later
+        localStorage.removeItem("access_token");
+        localStorage.removeItem("refresh_token");
         googleLogout();
         navigate("/login");
     };
