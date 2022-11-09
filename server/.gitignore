@@ -1,4 +1,7 @@
 env
+.env
+.env.local
+*.txt
 *.egg-info
 *.pot
 *.py[co]

@@ -1,20 +1,11 @@
 import requests
 from django.conf import settings
-from django.core.exceptions import ValidationError
+from livekit import AccessToken, VideoGrant
+import logging
+logger = logging.getLogger("mylogger")
 
-GOOGLE_ID_TOKEN_INFO_URL = 'https://www.googleapis.com/oauth2/v3/tokeninfo'
-
-def google_validate_id_token(*, id_token: str) -> bool:
-    response = requests.get(
-        GOOGLE_ID_TOKEN_INFO_URL,
-        params={'id_token': id_token}
-    )
-    
-    if not response.ok:
-        raise ValidationError('id_token is invalid.')
-    
-    audience = response.json()['aud']
-    if audience != settings.GOOGLE_OAUTH2_CLIENT_ID:
-        raise ValidationError('Invalid audience')
-
-    return True
+def create_room_token(room_id, name):
+    logger.info(f'api_key: {settings.LIVEKIT_API_KEY} dev secret: {settings.LIVEKIT_API_SECRET}')
+    grant = VideoGrant(room_join=True, room=room_id)
+    access_token = AccessToken(settings.LIVEKIT_API_KEY, settings.LIVEKIT_API_SECRET, grant=grant, identity=name, metadata="HAHHA") # TTL, ..
+    return access_token.to_jwt()
