@@ -1,6 +1,6 @@
 import { useGoogleLogin, useGoogleOneTapLogin } from "@react-oauth/google";
 import axios from "axios";
-import { login } from "./api/axios";
+import axiosInstance, { login } from "./api/axios";
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 

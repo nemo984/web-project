@@ -1,6 +1,19 @@
 import React from "react";
+import axiosInstance, { getAuthorizationHeader } from "./api/axios";
 
 const CreateChannel = () => {
+    const channelNameInputRef = React.useRef();
+
+    const createChannel = () => {
+        axiosInstance.post(
+            "/channels/",
+            { name: channelNameInputRef.current.value },
+            {
+                headers: { Authorization: getAuthorizationHeader() },
+            }
+        );
+    };
+
     return (
         <>
             <input
@@ -21,6 +34,7 @@ const CreateChannel = () => {
                         </label>
                         <label className="input-group">
                             <input
+                                ref={channelNameInputRef}
                                 type="text"
                                 className="input input-bordered w-full"
                             />
@@ -36,7 +50,7 @@ const CreateChannel = () => {
                         <label
                             htmlFor="Create-Channel"
                             className="btn"
-                            onClick={() => console.log("Create")}
+                            onClick={createChannel}
                         >
                             Create
                         </label>

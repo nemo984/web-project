@@ -1,12 +1,26 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { joinRoom } from "./features/room/roomSlice";
 import { googleLogout } from "@react-oauth/google";
 import { useNavigate } from "react-router-dom";
+import axiosInstance, { getAuthorizationHeader } from "./api/axios";
 
 const Drawer = () => {
     // get from api
     const channels = useSelector((state) => state.channels.value);
+
+    const getChannels = () => {
+        axiosInstance
+            .get("/me/channels/", {
+                headers: { Authorization: getAuthorizationHeader() },
+            })
+            .then((res) => console.log(res.data))
+            .catch(console.error);
+    };
+
+    useEffect(() => {
+        getChannels();
+    }, []);
 
     return (
         <>
@@ -35,7 +49,9 @@ const Drawer = () => {
  bg-base-100 text-base-content bg-primary flex flex-col justify-between"
                     >
                         <div className="mt-5">
-                            <Profile />
+                            <div onClick={getChannels}>
+                                <Profile />
+                            </div>
                             {channels.map((channel, i) => (
                                 <Channel key={i} channel={channel} />
                             ))}
