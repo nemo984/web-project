@@ -4,7 +4,6 @@ import random, string
 import time
 
 def random_code():
-    random.seed(time)
     return ''.join(random.choices(string.ascii_letters + string.digits, k=6))
 
 class Channel(models.Model):

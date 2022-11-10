@@ -4,8 +4,9 @@ from meet.models import Channel, Room, ChannelMember
 from django.contrib.auth.models import User
 from rest_framework import status
 from meet.serializers import UserSerializer, ChannelSerializer, RoomSerializer
-from meet import services
+from meet import services, models
 import logging
+
 logger = logging.getLogger("mylogger")
 
 class UserList(generics.ListCreateAPIView):
@@ -32,13 +33,19 @@ class ChannelViewSet(viewsets.ModelViewSet):
         serializer = self.serializer_class(c, data=request.data)
         if serializer.is_valid():
             serializer.save()
-            c.members.add(request.user.id)
+            cm = ChannelMember(user=request.user, channel=c, role=models.OWNER_ROLE)
+            cm.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class RoomViewSet(viewsets.ModelViewSet):
+    """
+    View to CRUD room
+
+    * Requires authentication. TODO: permissions,
+    """
     serializer_class = RoomSerializer
     permission_classes = [permissions.IsAuthenticated]
 
@@ -46,13 +53,6 @@ class RoomViewSet(viewsets.ModelViewSet):
         rooms = Room.objects.all()
         return rooms
 
-
-class UserViewSet(viewsets.ModelViewSet):
-    serializer_class = RoomSerializer
-
-    def get_queryset(self):
-        rooms = Room.objects.all()
-        return rooms
 
 class UserChannels(APIView):
     """
@@ -70,12 +70,30 @@ class ChannelRooms(APIView):
     """
     View to list and create rooms inside a channel
 
+    * Requires authentication. TODO: permissions
+    """
+    permission_classes = [permissions.IsAuthenticated]
+    
+    def post(self, request, pk):
+        channel = Channel.objects.filter(pk=pk).first()
+        if not channel:
+            return Response({"message": "Channel Not Found"}, status=status.HTTP_404_NOT_FOUND)
+        
+
+class ChannelLeave(APIView):
+    """
+    View to leave channel
+
     * Requires authentication.
     """
     permission_classes = [permissions.IsAuthenticated]
     
     def post(self, request, pk):
-        pass
+        channel = Channel.objects.filter(pk=pk).first()
+        if not channel:
+            return Response({"message": "Channel Not Found"}, status=status.HTTP_404_NOT_FOUND)
+        channel.members.remove(request.user.id)
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 class InviteLink(APIView):
     """
