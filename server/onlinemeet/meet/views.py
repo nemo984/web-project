@@ -1,14 +1,12 @@
 from rest_framework.views import APIView, Response
 from rest_framework import generics, permissions, viewsets
-from meet.models import Channel, Room
+from meet.models import Channel, Room, ChannelMember
 from django.contrib.auth.models import User
 from rest_framework import status
 from meet.serializers import UserSerializer, ChannelSerializer, RoomSerializer
 from meet import services
 import logging
 logger = logging.getLogger("mylogger")
-
-# Create your views here.
 
 class UserList(generics.ListCreateAPIView):
     permission_classes = (permissions.AllowAny,)
@@ -21,17 +19,28 @@ class UserDetail(generics.RetrieveAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
-
 class ChannelViewSet(viewsets.ModelViewSet):
     serializer_class = ChannelSerializer
+    permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
         channels = Channel.objects.all()
         return channels
+    
+    def create(self, request, *args, **kwargs):
+        c = Channel(owner=self.request.user)
+        serializer = self.serializer_class(c, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            c.members.add(request.user.id)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class RoomViewSet(viewsets.ModelViewSet):
     serializer_class = RoomSerializer
+    permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
         rooms = Room.objects.all()
@@ -56,6 +65,17 @@ class UserChannels(APIView):
     def get(self, request):
         c = ChannelSerializer(request.user.channels, many=True)
         return Response(c.data, status=status.HTTP_200_OK)
+
+class ChannelRooms(APIView):
+    """
+    View to list and create rooms inside a channel
+
+    * Requires authentication.
+    """
+    permission_classes = [permissions.IsAuthenticated]
+    
+    def post(self, request, pk):
+        pass
 
 class InviteLink(APIView):
     """
@@ -84,8 +104,7 @@ class ChannelRoomToken(APIView):
         channel = Channel.objects.filter(pk=channel_id).first()
         if not channel:
             return Response({"message": "Channel Not Found"}, status=status.HTTP_404_NOT_FOUND)
-
-        if request.user not in channel.members.all():
+        if not channel.members.filter(pk=request.user.id).exists():
             return Response({"message": "User is not a member of the channel"}, status=status.HTTP_403_FORBIDDEN)
         
         room = channel.rooms.filter(pk=room_id).first()

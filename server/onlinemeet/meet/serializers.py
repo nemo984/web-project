@@ -19,9 +19,11 @@ class ChannelMemberSerializer(serializers.ModelSerializer):
     class Meta:
         model = ChannelMember
         fields = ("join_date", "user", "role")
+        optional_fields = ['members', ]
 
 class ChannelSerializer(serializers.ModelSerializer):
-    members = ChannelMemberSerializer(source='channelmember_set', many=True)
+    owner = UserSerializer(required=False)
+    members = ChannelMemberSerializer(source='channelmember_set', many=True, required=False)
     class Meta:
         model = Channel
         fields = [field.name for field in model._meta.fields]

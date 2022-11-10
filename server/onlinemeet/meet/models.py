@@ -10,7 +10,8 @@ def random_code():
 class Channel(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     name = models.CharField(max_length=20)
-    members = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='channels', through='ChannelMember')
+    members = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='channels', through='ChannelMember', blank=True)
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
     invite_code = models.CharField(max_length=10, editable=False, default=random_code) # Maybe another model, : expires, remove, etc.
 
     def get_members(self):
