@@ -4,7 +4,7 @@ import "react-tabs/style/react-tabs.css";
 import "reactjs-popup/dist/index.css";
 import Popup from "reactjs-popup";
 
-const ChannelSettings = () => {
+const ChannelSettings = ({ handleDeleteChannel }) => {
     const inviteLink = "localhost:3000/afjafakjfa";
 
     return (
@@ -62,7 +62,10 @@ const ChannelSettings = () => {
                                     </div>
                                     <br />
                                     <div>
-                                        <button className="btn btn-ghost btn-xs">
+                                        <button
+                                            className="btn btn-ghost btn-xs"
+                                            onClick={handleDeleteChannel}
+                                        >
                                             Delete channel
                                         </button>
                                     </div>

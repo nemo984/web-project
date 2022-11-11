@@ -1,20 +1,20 @@
 import React, { useEffect, useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import { joinRoom } from "./features/room/roomSlice";
 import { googleLogout } from "@react-oauth/google";
 import { useNavigate } from "react-router-dom";
-import axiosInstance, { getAuthorizationHeader } from "./api/axios";
+import axiosInstance from "./api/axios";
+import axios from "axios";
+import CreateChannel from "./CreateChannel";
 
 const Drawer = () => {
     // get from api
-    const channels = useSelector((state) => state.channels.value);
+    const [channels, setChannels] = useState([]);
 
     const getChannels = () => {
-        axiosInstance
-            .get("/me/channels/", {
-                headers: { Authorization: getAuthorizationHeader() },
-            })
-            .then((res) => console.log(res.data))
+        axiosInstance()
+            .get("/me/channels/")
+            .then((res) => setChannels(res.data))
             .catch(console.error);
     };
 
@@ -45,24 +45,18 @@ const Drawer = () => {
                         className="drawer-overlay"
                     ></label>
                     <ul
-                        className="menu p-4 overflow-y-auto 
+                        className="menu p-4 overflow-y-auto scrollbar scrollbar-thumb-gray-900 scrollbar-track-gray-100 
  bg-base-100 text-base-content bg-primary flex flex-col justify-between"
                     >
                         <div className="mt-5">
-                            <div onClick={getChannels}>
+                            <div>
                                 <Profile />
                             </div>
                             {channels.map((channel, i) => (
                                 <Channel key={i} channel={channel} />
                             ))}
-                        </div>
-                        <div className="w-full h-24 bg-transparent grid justify-items-stretch">
-                            <label
-                                htmlFor="Create-Channel"
-                                className="btn justify-self-end bg-Hover"
-                            >
-                                +
-                            </label>
+
+                            <CreateChannel getChannels={getChannels} />
                         </div>
                     </ul>
                 </div>
@@ -73,26 +67,46 @@ const Drawer = () => {
 
 //TODO: put components into each js file
 const Profile = () => {
+    // call api without google
+    const [userInfo, setUserInfo] = useState({});
+
+    const getProfile = async () => {
+        const userInfo = await axios
+            .get("https://www.googleapis.com/oauth2/v3/userinfo", {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem(
+                        "google_access_token"
+                    )}`,
+                },
+            })
+            .then((res) => res.data);
+        setUserInfo(userInfo);
+    };
+
+    useEffect(() => {
+        localStorage.getItem("google_access_token") && getProfile();
+    }, []);
+
     const navigate = useNavigate();
 
     const handleLogout = () => {
         // move later
-        localStorage.removeItem("access_token");
-        localStorage.removeItem("refresh_token");
+        localStorage.clear();
         googleLogout();
         navigate("/login");
     };
 
     return (
-        <div className="dropdown mb-3">
+        <div className="dropdown mb-3 flex">
             <label
                 tabIndex={0}
-                className="btn btn-ghost btn-circle avatar w-full h-full ring ring-primary ring-offset-base-100 ring-offset-2"
+                className="btn btn-ghost btn-circle avatar h-full ring ring-primary ring-offset-base-100 ring-offset-2"
             >
                 <div className="w-16 rounded-full">
                     <img
-                        src="https://placeimg.com/80/80/people"
+                        src={userInfo?.picture}
                         alt="profile pic"
+                        referrerPolicy="no-referrer"
                         className="h-full w-full"
                     />
                 </div>
@@ -108,6 +122,9 @@ const Profile = () => {
                     <a>Logout</a>
                 </li>
             </ul>
+            <div className="ml-5 mt-2 text-xl text-secondary">
+                {userInfo?.name}
+            </div>
         </div>
     );
 };
@@ -152,6 +169,7 @@ const Channel = ({ channel }) => {
 
 const Room = ({ room }) => {
     const dispatch = useDispatch();
+    const [roomToken, setRoomToken] = useState("");
 
     return (
         <li onClick={() => dispatch(joinRoom())}>

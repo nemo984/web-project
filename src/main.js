@@ -1,5 +1,4 @@
 import Drawer from "./Drawer";
-import CreateChannel from "./CreateChannel";
 import CreateRoom from "./CreateRoom";
 import MeetingRoom from "./MeetingRoom";
 import ChannelSettings from "./components/ChannelSettings";
@@ -11,7 +10,6 @@ export function Main() {
             <Drawer />
             <Settings />
             <ChannelSettings />
-            <CreateChannel />
             <CreateRoom />
             <MeetingRoom />
         </div>
