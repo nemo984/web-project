@@ -6,10 +6,19 @@ import { useNavigate } from "react-router-dom";
 import axiosInstance from "./api/axios";
 import axios from "axios";
 import CreateChannel from "./CreateChannel";
+import { Collapse } from "react-collapse";
+import Popup from "reactjs-popup";
+import ToolTip from "./common/ToolTip";
+import CreateRoom from "./CreateRoom";
 
 const Drawer = () => {
     // get from api
     const [channels, setChannels] = useState([]);
+
+    const addChannel = (channel) => {
+        console.log(channel);
+        setChannels((prevState) => [...prevState, channel]);
+    };
 
     const getChannels = () => {
         axiosInstance()
@@ -56,7 +65,7 @@ const Drawer = () => {
                                 <Channel key={i} channel={channel} />
                             ))}
 
-                            <CreateChannel getChannels={getChannels} />
+                            <CreateChannel addChannel={addChannel} />
                         </div>
                     </ul>
                 </div>
@@ -130,38 +139,110 @@ const Profile = () => {
 };
 
 const Channel = ({ channel }) => {
-    return (
-        <div
-            className="collapse collapse-arrow text-secondary font-light
-        "
-        >
-            <input type="checkbox" />
-            <div className="collapse-title text-xl font-medium">
-                <div className="flex justify-between">{channel.name}</div>
-            </div>
+    const [isCollapseOpen, setIsCollapseOpen] = useState(false);
+    const [rooms, setRooms] = useState([]);
 
-            <label htmlFor="channel-settings" className="inline-block">
-                <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="icon icon-tabler icon-tabler-settings"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    strokeWidth="2"
-                    stroke="currentColor"
-                    fill="none"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
+    const addRoom = (room) => {
+        setRooms((prevState) => [...prevState, room]);
+    };
+
+    useEffect(() => {
+        if (channel?.rooms) {
+            setRooms(channel.rooms);
+        }
+    }, [channel]);
+
+    return (
+        <div className="text-secondary font-light mb-3">
+            <div className="flex justify-between items-center">
+                <div
+                    className="cursor-pointer text-xl font-medium bg-transparent w-full"
+                    onClick={() => setIsCollapseOpen((prevState) => !prevState)}
                 >
-                    <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                    <path d="M10.325 4.317c.426 -1.756 2.924 -1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543 -.94 3.31 .826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756 .426 1.756 2.924 0 3.35a1.724 1.724 0 0 0 -1.066 2.573c.94 1.543 -.826 3.31 -2.37 2.37a1.724 1.724 0 0 0 -2.572 1.065c-.426 1.756 -2.924 1.756 -3.35 0a1.724 1.724 0 0 0 -2.573 -1.066c-1.543 .94 -3.31 -.826 -2.37 -2.37a1.724 1.724 0 0 0 -1.065 -2.572c-1.756 -.426 -1.756 -2.924 0 -3.35a1.724 1.724 0 0 0 1.066 -2.573c-.94 -1.543 .826 -3.31 2.37 -2.37c1 .608 2.296 .07 2.572 -1.065z"></path>
-                    <circle cx="12" cy="12" r="3"></circle>
-                </svg>
-            </label>
-            <div className="collapse-content">
-                {channel.rooms.map((room, i) => (
-                    <Room key={i} room={room} />
-                ))}
+                    <div className="inline-block"></div>
+                    {!isCollapseOpen ? (
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="icon icon-tabler icon-tabler-chevron-down inline-block mr-3"
+                            width="24"
+                            height="24"
+                            viewBox="0 0 24 24"
+                            strokeWidth="2"
+                            stroke="currentColor"
+                            fill="none"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                        >
+                            <path
+                                stroke="none"
+                                d="M0 0h24v24H0z"
+                                fill="none"
+                            ></path>
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                    ) : (
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="icon icon-tabler icon-tabler-chevron-up inline-block mr-3"
+                            width="24"
+                            height="24"
+                            viewBox="0 0 24 24"
+                            strokeWidth="2"
+                            stroke="currentColor"
+                            fill="none"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                        >
+                            <path
+                                stroke="none"
+                                d="M0 0h24v24H0z"
+                                fill="none"
+                            ></path>
+                            <polyline points="6 15 12 9 18 15"></polyline>
+                        </svg>
+                    )}
+                    {channel.name}
+                </div>
+                <ToolTip text="Settings">
+                    <Popup
+                        trigger={
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                className="cursor-pointer"
+                                width="24"
+                                height="24"
+                                viewBox="0 0 24 24"
+                                strokeWidth="2"
+                                stroke="currentColor"
+                                fill="none"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                            >
+                                <path
+                                    stroke="none"
+                                    d="M0 0h24v24H0z"
+                                    fill="none"
+                                ></path>
+                                <path d="M10.325 4.317c.426 -1.756 2.924 -1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543 -.94 3.31 .826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756 .426 1.756 2.924 0 3.35a1.724 1.724 0 0 0 -1.066 2.573c.94 1.543 -.826 3.31 -2.37 2.37a1.724 1.724 0 0 0 -2.572 1.065c-.426 1.756 -2.924 1.756 -3.35 0a1.724 1.724 0 0 0 -2.573 -1.066c-1.543 .94 -3.31 -.826 -2.37 -2.37a1.724 1.724 0 0 0 -1.065 -2.572c-1.756 -.426 -1.756 -2.924 0 -3.35a1.724 1.724 0 0 0 1.066 -2.573c-.94 -1.543 .826 -3.31 2.37 -2.37c1 .608 2.296 .07 2.572 -1.065z"></path>
+                                <circle cx="12" cy="12" r="3"></circle>
+                            </svg>
+                        }
+                        modal
+                    >
+                        <span> Modal content </span>
+                    </Popup>
+                </ToolTip>
+
+                <ToolTip text="Create Room">
+                    <CreateRoom channelId={channel.id} addRoom={addRoom} />
+                </ToolTip>
+            </div>
+            <div className="ml-5">
+                <Collapse isOpened={isCollapseOpen}>
+                    {rooms.map((room, i) => (
+                        <Room key={i} room={room} />
+                    ))}
+                </Collapse>
             </div>
         </div>
     );

@@ -1,22 +1,23 @@
 import React from "react";
-import { useDispatch } from "react-redux";
 import Popup from "reactjs-popup";
 import axiosInstance from "./api/axios";
 
-const CreateChannel = ({ getChannels }) => {
+const CreateChannel = ({ addChannel }) => {
     const channelNameInputRef = React.useRef();
 
     const createChannel = async () => {
         const axios = axiosInstance();
         try {
-            const res = await axios.post("/channels/", {
+            const channelRes = await axios.post("/channels/", {
                 name: channelNameInputRef.current.value,
             });
-            await axios.post("/rooms/", {
+            const channel = channelRes.data;
+            const roomRes = await axios.post("/rooms/", {
                 name: "Default",
-                channel: res.data.id,
+                channel: channel.id,
             });
-            getChannels();
+            channel.rooms.push(roomRes.data);
+            addChannel(channel);
         } catch (e) {
             console.error(e);
         }
