@@ -13,7 +13,6 @@ import {
 } from "livekit-client";
 import React from "react";
 
-
 const config = {
     iceServers: [
         {

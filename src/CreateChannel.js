@@ -1,34 +1,52 @@
-import React from "react";
+import axios from "axios";
+import React, { useState } from "react";
+import { toast } from "react-toastify";
 import Popup from "reactjs-popup";
 import axiosInstance from "./api/axios";
+import ToolTip from "./common/ToolTip";
 
 const CreateChannel = ({ addChannel }) => {
     const channelNameInputRef = React.useRef();
 
     const createChannel = async () => {
-        try {
-            const channelRes = await axiosInstance.post("/channels/", {
-                name: channelNameInputRef.current.value,
-            });
-            const channel = channelRes.data;
-            const roomRes = await axiosInstance.post("/rooms/", {
-                name: "Default",
-                channel: channel.id,
-            });
-            channel.rooms.push(roomRes.data);
-            addChannel(channel);
-        } catch (e) {
-            console.error(e);
-        }
+        const channelName = channelNameInputRef.current.value;
+
+        const channelRes = await axiosInstance.post("/channels/", {
+            name: channelName,
+        });
+        const channel = channelRes.data;
+        const roomRes = await axiosInstance.post("/rooms/", {
+            name: "Default",
+            channel: channel.id,
+        });
+        channel.rooms.push(roomRes.data);
+        addChannel(channel);
     };
 
     return (
         <Popup
             trigger={
-                <div className="w-full h-24 bg-transparent grid justify-items-stretch">
-                    <label className="btn justify-self-end bg-Hover rounded-full">
-                        +
-                    </label>
+                <div className="btn bg-Hover rounded-full w-full">
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="rounded-full"
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        strokeWidth="2"
+                        stroke="currentColor"
+                        fill="none"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                    >
+                        <path
+                            stroke="none"
+                            d="M0 0h24v24H0z"
+                            fill="none"
+                        ></path>
+                        <line x1="12" y1="5" x2="12" y2="19"></line>
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                    </svg>
                 </div>
             }
             contentStyle={{ borderRadius: "20px", maxWidth: "32rem" }}

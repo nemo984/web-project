@@ -8,7 +8,7 @@ def random_code():
 
 class Channel(models.Model):
     created = models.DateTimeField(auto_now_add=True)
-    name = models.CharField(max_length=20)
+    name = models.CharField(max_length=50)
     members = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='channels', through='ChannelMember', blank=True)
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
     invite_code = models.CharField(max_length=10, editable=False, default=random_code) # Maybe another model, : expires, remove, etc.
@@ -42,7 +42,7 @@ class ChannelMember(models.Model):
 class Room(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     channel = models.ForeignKey(Channel, related_name='rooms', on_delete=models.CASCADE)
-    name = models.CharField(max_length=20)
+    name = models.CharField(max_length=50)
 
     def __str__(self):
         return self.name

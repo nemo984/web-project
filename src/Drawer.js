@@ -7,9 +7,9 @@ import axiosInstance from "./api/axios";
 import axios from "axios";
 import CreateChannel from "./CreateChannel";
 import { Collapse } from "react-collapse";
-import Popup from "reactjs-popup";
 import ToolTip from "./common/ToolTip";
 import CreateRoom from "./CreateRoom";
+import ChannelSettings from "./components/ChannelSettings";
 
 const Drawer = () => {
     // get from api
@@ -19,11 +19,12 @@ const Drawer = () => {
         setChannels((prevState) => [...prevState, channel]);
     };
 
+    const removeChannel = (channelId) => {
+        setChannels((channels) => channels.filter((c) => c.id !== channelId));
+    };
+
     const getChannels = () => {
-        axiosInstance
-            .get("/me/channels/")
-            .then((res) => setChannels(res.data))
-            .catch(console.error);
+        axiosInstance.get("/me/channels/").then((res) => setChannels(res.data));
     };
 
     useEffect(() => {
@@ -61,9 +62,12 @@ const Drawer = () => {
                                 <Profile />
                             </div>
                             {channels.map((channel, i) => (
-                                <Channel key={i} channel={channel} />
+                                <Channel
+                                    key={i}
+                                    channel={channel}
+                                    removeChannel={removeChannel}
+                                />
                             ))}
-
                             <CreateChannel addChannel={addChannel} />
                         </div>
                     </ul>
@@ -137,7 +141,7 @@ const Profile = () => {
     );
 };
 
-const Channel = ({ channel }) => {
+const Channel = ({ channel, removeChannel }) => {
     const [isCollapseOpen, setIsCollapseOpen] = useState(false);
     const [rooms, setRooms] = useState([]);
 
@@ -152,7 +156,7 @@ const Channel = ({ channel }) => {
     }, [channel]);
 
     return (
-        <div className="text-secondary font-light mb-3">
+        <div className="text-secondary font-light mb-3 text-ellipsis">
             <div className="flex justify-between items-center">
                 <div
                     className="cursor-pointer text-xl font-medium bg-transparent w-full"
@@ -203,33 +207,10 @@ const Channel = ({ channel }) => {
                     {channel.name}
                 </div>
                 <ToolTip text="Settings">
-                    <Popup
-                        trigger={
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                className="cursor-pointer"
-                                width="24"
-                                height="24"
-                                viewBox="0 0 24 24"
-                                strokeWidth="2"
-                                stroke="currentColor"
-                                fill="none"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                            >
-                                <path
-                                    stroke="none"
-                                    d="M0 0h24v24H0z"
-                                    fill="none"
-                                ></path>
-                                <path d="M10.325 4.317c.426 -1.756 2.924 -1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543 -.94 3.31 .826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756 .426 1.756 2.924 0 3.35a1.724 1.724 0 0 0 -1.066 2.573c.94 1.543 -.826 3.31 -2.37 2.37a1.724 1.724 0 0 0 -2.572 1.065c-.426 1.756 -2.924 1.756 -3.35 0a1.724 1.724 0 0 0 -2.573 -1.066c-1.543 .94 -3.31 -.826 -2.37 -2.37a1.724 1.724 0 0 0 -1.065 -2.572c-1.756 -.426 -1.756 -2.924 0 -3.35a1.724 1.724 0 0 0 1.066 -2.573c-.94 -1.543 .826 -3.31 2.37 -2.37c1 .608 2.296 .07 2.572 -1.065z"></path>
-                                <circle cx="12" cy="12" r="3"></circle>
-                            </svg>
-                        }
-                        modal
-                    >
-                        <span> Modal content </span>
-                    </Popup>
+                    <ChannelSettings
+                        channel={channel}
+                        removeChannel={removeChannel}
+                    />
                 </ToolTip>
 
                 <ToolTip text="Create Room">
@@ -239,7 +220,7 @@ const Channel = ({ channel }) => {
             <div className="ml-5">
                 <Collapse isOpened={isCollapseOpen}>
                     {rooms.map((room, i) => (
-                        <Room key={i} room={room} />
+                        <Room key={i} room={room} isSelected={i === 0} />
                     ))}
                 </Collapse>
             </div>
@@ -248,18 +229,32 @@ const Channel = ({ channel }) => {
 };
 
 const Room = ({ room }) => {
+    const [isSelected, setIsSelected] = useState(false);
     const dispatch = useDispatch();
     const [roomToken, setRoomToken] = useState("");
 
     return (
-        <li onClick={() => dispatch(joinRoom())}>
-            <div className="flex justify-between">
+        <li
+            onClick={() => {
+                dispatch(joinRoom());
+                setIsSelected((prevState) => !prevState);
+            }}
+        >
+            <div
+                className="flex justify-between text-ellipsis p-0 ml-3 pl-2"
+                style={{
+                    backgroundColor:
+                        isSelected && "hsl(var(--bc) / var(--tw-bg-opacity))",
+                    "--tw-bg-opacity": "0.3",
+                }}
+            >
                 <div className="indicator">
                     <span className="indicator-item badge badge-secondary">
                         5
                     </span>
                     {room.name}
                 </div>
+
                 <button
                     className="btn btn-square btn-ghost"
                     onClick={(e) => e.stopPropagation()}

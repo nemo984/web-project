@@ -6,6 +6,7 @@ import { BrowserRouter } from "react-router-dom";
 import { store } from "./store";
 import { Provider } from "react-redux";
 import { GoogleOAuthProvider } from "@react-oauth/google";
+import { ToastContainer } from "react-toastify";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
@@ -15,6 +16,7 @@ root.render(
         >
             <BrowserRouter>
                 <Provider store={store}>
+                    <ToastContainer />
                     <App />
                 </Provider>
             </BrowserRouter>

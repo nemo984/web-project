@@ -6,16 +6,11 @@ const CreateRoom = ({ addRoom, channelId }) => {
     const roomNameInputRef = React.useRef();
 
     const createRoom = async () => {
-        try {
-            const res = await axiosInstance.post("/rooms/", {
-                name: roomNameInputRef.current.value,
-                channel: channelId,
-            });
-            addRoom(res.data);
-        } catch (e) {
-            console.error(e);
-            alert(e);
-        }
+        const res = await axiosInstance.post("/rooms/", {
+            name: roomNameInputRef.current.value,
+            channel: channelId,
+        });
+        addRoom(res.data);
     };
 
     return (

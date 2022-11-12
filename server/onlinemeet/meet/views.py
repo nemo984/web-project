@@ -44,7 +44,7 @@ class RoomViewSet(viewsets.ModelViewSet):
     """
     View to CRUD room
 
-    * Requires authentication. TODO: permissions,
+    * Requires authentication. TODO: permissions for owner,
     """
     serializer_class = RoomSerializer
     permission_classes = [permissions.IsAuthenticated]

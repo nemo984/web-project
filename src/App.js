@@ -7,15 +7,16 @@ import {
     Routes,
 } from "react-router-dom";
 import Main from "./main";
-
 function App() {
     return (
-        <Routes>
-            <Route exact path="/" element={<ProtectedRoute />}>
-                <Route exact path="/" element={<Main />} />
-            </Route>
-            <Route exact path="/login" element={<Login />} />
-        </Routes>
+        <>
+            <Routes>
+                <Route exact path="/" element={<ProtectedRoute />}>
+                    <Route exact path="/" element={<Main />} />
+                </Route>
+                <Route exact path="/login" element={<Login />} />
+            </Routes>
+        </>
     );
 }
 

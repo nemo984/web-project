@@ -1,6 +1,5 @@
 import Drawer from "./Drawer";
 import MeetingRoom from "./MeetingRoom";
-import ChannelSettings from "./components/ChannelSettings";
 import Settings from "./Setting";
 
 export function Main() {
@@ -8,7 +7,6 @@ export function Main() {
         <div className="flex">
             <Drawer />
             <Settings />
-            <ChannelSettings />
             <MeetingRoom />
         </div>
     );
