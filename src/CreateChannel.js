@@ -6,13 +6,12 @@ const CreateChannel = ({ addChannel }) => {
     const channelNameInputRef = React.useRef();
 
     const createChannel = async () => {
-        const axios = axiosInstance();
         try {
-            const channelRes = await axios.post("/channels/", {
+            const channelRes = await axiosInstance.post("/channels/", {
                 name: channelNameInputRef.current.value,
             });
             const channel = channelRes.data;
-            const roomRes = await axios.post("/rooms/", {
+            const roomRes = await axiosInstance.post("/rooms/", {
                 name: "Default",
                 channel: channel.id,
             });

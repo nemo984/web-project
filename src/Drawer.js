@@ -16,12 +16,11 @@ const Drawer = () => {
     const [channels, setChannels] = useState([]);
 
     const addChannel = (channel) => {
-        console.log(channel);
         setChannels((prevState) => [...prevState, channel]);
     };
 
     const getChannels = () => {
-        axiosInstance()
+        axiosInstance
             .get("/me/channels/")
             .then((res) => setChannels(res.data))
             .catch(console.error);
