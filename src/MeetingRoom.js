@@ -151,7 +151,7 @@ const Footer = ({ handleFullScreen, room }) => {
 
     const handleLeaveRoom = () => {
         room.disconnect();
-        dispatch(leaveRoom({ payload: "lll" }));
+        dispatch(leaveRoom());
     };
 
     return (

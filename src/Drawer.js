@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { joinRoom } from "./features/room/roomSlice";
 import { googleLogout } from "@react-oauth/google";
 import { useNavigate } from "react-router-dom";
@@ -10,6 +10,7 @@ import { Collapse } from "react-collapse";
 import ToolTip from "./common/ToolTip";
 import CreateRoom from "./CreateRoom";
 import ChannelSettings from "./components/ChannelSettings";
+import jwt_decode from "jwt-decode";
 
 const Drawer = () => {
     // get from api
@@ -144,6 +145,7 @@ const Profile = () => {
 const Channel = ({ channel, removeChannel }) => {
     const [isCollapseOpen, setIsCollapseOpen] = useState(false);
     const [rooms, setRooms] = useState([]);
+    const selectedRoomId = useSelector((state) => state.room.selectedRoomId);
 
     const addRoom = (room) => {
         setRooms((prevState) => [...prevState, room]);
@@ -220,7 +222,11 @@ const Channel = ({ channel, removeChannel }) => {
             <div className="ml-5">
                 <Collapse isOpened={isCollapseOpen}>
                     {rooms.map((room, i) => (
-                        <Room key={i} room={room} isSelected={i === 0} />
+                        <Room
+                            key={i}
+                            room={room}
+                            isSelected={selectedRoomId === room.id}
+                        />
                     ))}
                 </Collapse>
             </div>
@@ -228,23 +234,35 @@ const Channel = ({ channel, removeChannel }) => {
     );
 };
 
-const Room = ({ room }) => {
-    const [isSelected, setIsSelected] = useState(false);
-    const dispatch = useDispatch();
+const Room = ({ room, isSelected }) => {
+    const getRoomToken = async () => {
+        if (roomToken === "") {
+            const res = await axiosInstance.get(
+                `/channels/${room.channel}/rooms/${room.id}/token`
+            );
+            const token = res.data.token;
+            setRoomToken(token);
+            return token;
+        }
+        return roomToken;
+    };
     const [roomToken, setRoomToken] = useState("");
+    const dispatch = useDispatch();
 
     return (
         <li
             onClick={() => {
-                dispatch(joinRoom());
-                setIsSelected((prevState) => !prevState);
+                getRoomToken().then((token) => {
+                    dispatch(joinRoom({ token, room }));
+                });
             }}
         >
             <div
-                className="flex justify-between text-ellipsis p-0 ml-3 pl-2"
+                className="btn border-none flex justify-between text-ellipsis p-0 ml-3 pl-2"
                 style={{
-                    backgroundColor:
-                        isSelected && "hsl(var(--bc) / var(--tw-bg-opacity))",
+                    backgroundColor: isSelected
+                        ? "hsl(var(--bc) / var(--tw-bg-opacity))"
+                        : "transparent",
                     "--tw-bg-opacity": "0.3",
                 }}
             >
