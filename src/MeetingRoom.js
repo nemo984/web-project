@@ -125,6 +125,9 @@ const Participant = ({ participant, showAvatar, videoRef, me }) => {
 };
 
 const Footer = ({ handleFullScreen, room }) => {
+    const [isMicrophoneEnabled, setIsMicrophoneEnabled] = useState(true);
+    const [isCameraEnabled, setIsCameraEnabled] = useState(false);
+
     const dispatch = useDispatch();
 
     const toggleShareScreen = async () => {
@@ -134,20 +137,16 @@ const Footer = ({ handleFullScreen, room }) => {
     };
 
     const toggleMicrophone = async () => {
-        console.log("trying to mute");
-        await room.localParticipant.setMicrophoneEnabled(
-            !room.localParticipant.isMicrophoneEnabled
-        );
+        await room.localParticipant.setMicrophoneEnabled(!isMicrophoneEnabled);
+        setIsMicrophoneEnabled((prevState) => !prevState);
     };
 
     const toggleCamera = async () => {
-        await room.localParticipant.setCameraEnabled(
-            !room.localParticipant.isCameraEnabled
-        );
+        await room.localParticipant.setCameraEnabled(!isCameraEnabled);
+        setIsCameraEnabled((prevState) => !prevState);
     };
 
     const handleLeaveRoom = () => {
-        room.disconnect();
         dispatch(leaveRoom());
     };
 
@@ -155,7 +154,7 @@ const Footer = ({ handleFullScreen, room }) => {
         <div className="flex justify-center mt-5 p-5 bg-slate-600 w-full h-full">
             <div className="btn-group">
                 <button className="btn" onClick={toggleMicrophone}>
-                    {room.localParticipant.isMicrophoneEnabled ? (
+                    {isMicrophoneEnabled ? (
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
                             className="swap-on fill-current icon icon-tabler icon-tabler-microphone"
@@ -211,7 +210,7 @@ const Footer = ({ handleFullScreen, room }) => {
                     )}
                 </button>
                 <button className="btn" onClick={toggleCamera}>
-                    {room.localParticipant.isCameraEnabled ? (
+                    {isCameraEnabled ? (
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
                             className="swap-on fill-current icon icon-tabler icon-tabler-video"
@@ -406,6 +405,7 @@ const Footer = ({ handleFullScreen, room }) => {
 };
 
 export const RoomPage = ({ token, handleFullScreen }) => {
+    const [room, setRoom] = useState(null);
     const audioInputDeviceId = useSelector(
         (state) => state.user.audioInputDeviceId
     );
@@ -415,6 +415,19 @@ export const RoomPage = ({ token, handleFullScreen }) => {
     const videoInputDeviceId = useSelector(
         (state) => state.user.videoInputDeviceId
     );
+
+    const selectedRoomId = useSelector((state) => state.room.selectedRoomId);
+
+    useEffect(() => {
+        if (room !== null) {
+            console.log("Switching ROoms");
+            const roomId = room.name.split("-")[0];
+            if (selectedRoomId.toString() !== roomId) {
+                console.log("Disconnecting from existing room");
+                room.disconnect();
+            }
+        }
+    }, [selectedRoomId, room]);
 
     // change audio input
     useEffect(() => {
@@ -441,12 +454,13 @@ export const RoomPage = ({ token, handleFullScreen }) => {
     }, [videoInputDeviceId]);
 
     async function onConnected(room) {
-        await room.localParticipant.setCameraEnabled(true);
-        await room.localParticipant.setMicrophoneEnabled(true);
+        await room.localParticipant.setCameraEnabled(false);
+        await room.localParticipant.setMicrophoneEnabled(false);
+        setRoom(room);
     }
 
-    return (
-        <div className="roomContainer">
+    const getRoomComponent = (token) => {
+        return (
             <LiveKitRoom
                 url={url}
                 token={token}
@@ -461,8 +475,11 @@ export const RoomPage = ({ token, handleFullScreen }) => {
                     );
                 }}
             />
-        </div>
-    );
+        );
+    };
+    const Room = getRoomComponent(token);
+
+    return <div className="roomContainer">{Room}</div>;
 };
 
 export default MeetingRoom;

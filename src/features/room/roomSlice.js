@@ -47,12 +47,14 @@ export const roomSlice = createSlice({
             state.selectedRoomId = room.id;
             state.currentRoom = room;
             state.loading = "joined";
+            state.isInRoom = true;
         },
         leaveRoom: (state) => {
             state.roomId = "";
             state.loading = "idle";
             state.selectedRoomId = -1;
             state.currentRoom = {};
+            state.isInRoom = false;
         },
         changeRoom: (state) => {}, // leave room + join room
         shareScreen: (state) => {},

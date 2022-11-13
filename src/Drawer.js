@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { joinRoom } from "./features/room/roomSlice";
+import { joinRoom, leaveRoom } from "./features/room/roomSlice";
 import { googleLogout } from "@react-oauth/google";
 import { useNavigate } from "react-router-dom";
 import axiosInstance from "./api/axios";
@@ -253,6 +253,7 @@ const Room = ({ room, isSelected }) => {
         <li
             onClick={() => {
                 getRoomToken().then((token) => {
+                    dispatch(leaveRoom());
                     dispatch(joinRoom({ token, room }));
                 });
             }}

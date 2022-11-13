@@ -25,9 +25,8 @@ axiosInstance.interceptors.response.use(
         return response;
     },
     function (error) {
-        toast.error(
-            error.response ? JSON.stringify(error.response.data) : error.message
-        );
+        const err = JSON.stringify(error?.response?.data ?? error.message);
+        toast.error(error.message);
         return Promise.reject(error);
     }
 );

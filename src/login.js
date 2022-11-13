@@ -2,7 +2,7 @@ import { useGoogleLogin, useGoogleOneTapLogin } from "@react-oauth/google";
 import axios from "axios";
 import axiosInstance, { login } from "./api/axios";
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 
 const Login = () => {
     let navigate = useNavigate();
@@ -10,6 +10,7 @@ const Login = () => {
         email: "",
         password: "",
     });
+    const { redirectTo } = useSearchParams();
 
     const googleLogin = useGoogleLogin({
         onSuccess: async (tokenResponse) => {
@@ -37,7 +38,11 @@ const Login = () => {
                         "refresh_token",
                         res.data.refresh_token
                     );
-                    navigate("/");
+                    if (redirectTo) {
+                        navigate(redirectTo);
+                    } else {
+                        navigate("/");
+                    }
                 })
                 .catch(console.error);
         },
@@ -65,7 +70,11 @@ const Login = () => {
                 console.log(res);
                 localStorage.setItem("access_token", res.data.access_token);
                 localStorage.setItem("refresh_token", res.data.refresh_token);
-                navigate("/");
+                if (redirectTo) {
+                    navigate(redirectTo);
+                } else {
+                    navigate("/");
+                }
             })
             .catch(console.error);
     };
