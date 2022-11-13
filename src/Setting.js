@@ -68,7 +68,7 @@ const Settings = () => {
                                     </option>
                                     {audioInputDevices.map((device, i) => (
                                         <option
-                                            key={i}
+                                            key={device.deviceId}
                                             selected={i === 0}
                                             value={device.deviceId}
                                         >
@@ -94,7 +94,7 @@ const Settings = () => {
                                     </option>
                                     {audioOutputDevices.map((device, i) => (
                                         <option
-                                            key={i}
+                                            key={device.deviceId}
                                             selected={i === 0}
                                             value={device.deviceId}
                                         >
@@ -119,7 +119,7 @@ const Settings = () => {
                                 </option>
                                 {videoInputDevices.map((device, i) => (
                                     <option
-                                        key={i}
+                                        key={device.deviceId}
                                         selected={i === 0}
                                         value={device.deviceId}
                                     >

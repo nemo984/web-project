@@ -34,7 +34,7 @@ export const roomSlice = createSlice({
         loading: "idle",
         selectedRoomId: -1,
         isInRoom: false,
-        roomId: "",
+        currentRoom: {},
         roomToken: "",
         id: "",
         participants: [],
@@ -45,13 +45,14 @@ export const roomSlice = createSlice({
             const { token, room } = action.payload;
             state.roomToken = token ?? prompt("Access Token");
             state.selectedRoomId = room.id;
-            state.roomId = action.payload;
+            state.currentRoom = room;
             state.loading = "joined";
         },
         leaveRoom: (state) => {
             state.roomId = "";
             state.loading = "idle";
             state.selectedRoomId = -1;
+            state.currentRoom = {};
         },
         changeRoom: (state) => {}, // leave room + join room
         shareScreen: (state) => {},

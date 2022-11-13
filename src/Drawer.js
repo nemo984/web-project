@@ -62,9 +62,9 @@ const Drawer = () => {
                             <div>
                                 <Profile />
                             </div>
-                            {channels.map((channel, i) => (
+                            {channels.map((channel) => (
                                 <Channel
-                                    key={i}
+                                    key={channel.id}
                                     channel={channel}
                                     removeChannel={removeChannel}
                                 />
@@ -221,9 +221,9 @@ const Channel = ({ channel, removeChannel }) => {
             </div>
             <div className="ml-5">
                 <Collapse isOpened={isCollapseOpen}>
-                    {rooms.map((room, i) => (
+                    {rooms.map((room) => (
                         <Room
-                            key={i}
+                            key={room.id}
                             room={room}
                             isSelected={selectedRoomId === room.id}
                         />
@@ -258,17 +258,21 @@ const Room = ({ room, isSelected }) => {
             }}
         >
             <div
-                className="btn border-none flex justify-between text-ellipsis p-0 ml-3 pl-2"
+                className="border-none flex justify-between text-ellipsis p-0 ml-3 pl-2"
                 style={{
-                    backgroundColor: isSelected
-                        ? "hsl(var(--bc) / var(--tw-bg-opacity))"
-                        : "transparent",
-                    "--tw-bg-opacity": "0.3",
+                    backgroundColor: "hsl(var(--bc) / var(--tw-bg-opacity))",
+                    "--tw-bg-opacity": isSelected ? "0.3" : "0",
+                    "&:hover": {
+                        // TODO: bug
+                        backgroundColor:
+                            "hsl(var(--bc) / var(--tw-bg-opacity))",
+                        "--tw-bg-opacity": "0.1",
+                    },
                 }}
             >
                 <div className="indicator">
                     <span className="indicator-item badge badge-secondary">
-                        5
+                        {isSelected ? 1 : 0}
                     </span>
                     {room.name}
                 </div>

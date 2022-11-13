@@ -89,7 +89,10 @@ const Login = () => {
                         <h1 class="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
                             Sign in to your account
                         </h1>
-                        <form class="space-y-4 md:space-y-6" noValidate>
+                        <form
+                            class="space-y-4 md:space-y-6"
+                            onSubmit={handleSubmit}
+                        >
                             <div>
                                 <label
                                     htmlFor="email"
@@ -145,17 +148,17 @@ const Login = () => {
                                         </label>
                                     </div>
                                 </div>
-                                <a
-                                    href="#"
-                                    class="text-sm font-medium text-primary-600 hover:underline dark:text-primary-500"
+
+                                <Link
+                                    to="/register"
+                                    className="text-sm font-medium text-primary-600 hover:underline dark:text-primary-500"
                                 >
                                     Forgot password?
-                                </a>
+                                </Link>
                             </div>
                             <button
                                 type="submit"
                                 className="w-full text-white bg-primary hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
-                                onClick={handleSubmit}
                             >
                                 Sign in
                             </button>

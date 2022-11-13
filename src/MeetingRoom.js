@@ -13,18 +13,15 @@ import { LiveKitRoom } from "@livekit/react-components";
 const url = process.env.REACT_APP_LIVEKIT_URL;
 
 const MeetingRoom = () => {
-    const roomName = useSelector((state) => state.room.roomId);
+    const room = useSelector((state) => state.room.currentRoom);
     const roomToken = useSelector((state) => state.room.roomToken);
     const isInRoom = useSelector((state) => state.room.loading);
-    const participantsName = useSelector((state) => state.room.participants);
 
     const handleFullScreen = useFullScreenHandle();
-    const myVideoRef = useRef();
-
-    const you = { fullName: "It's you", initials: "IU" };
 
     return (
         <div className="h-screen w-full bg-slate-100 overflow-hidden">
+            {JSON.stringify(room)}
             {isInRoom !== "idle" && (
                 <FullScreen
                     handle={handleFullScreen}

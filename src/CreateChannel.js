@@ -1,9 +1,6 @@
-import axios from "axios";
-import React, { useState } from "react";
-import { toast } from "react-toastify";
+import React from "react";
 import Popup from "reactjs-popup";
 import axiosInstance from "./api/axios";
-import ToolTip from "./common/ToolTip";
 
 const CreateChannel = ({ addChannel }) => {
     const channelNameInputRef = React.useRef();
