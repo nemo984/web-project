@@ -152,7 +152,7 @@ const Footer = ({ handleFullScreen, room }) => {
     };
 
     return (
-        <div className="flex justify-center mt-5 p-5 bg-slate-600 w-full h-full">
+        <div className="flex justify-center mt-5 p-5 bg-slate-600 w-full fixed bottom-0">
             <div className="btn-group">
                 <button className="btn" onClick={toggleMicrophone}>
                     {isMicrophoneEnabled ? (

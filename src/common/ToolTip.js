@@ -4,7 +4,7 @@ import Popup from "reactjs-popup";
 const ToolTip = ({ text, children, ...rest }) => {
     return (
         <Popup
-            trigger={<div>{children}</div>}
+            trigger={<div className="inline-block">{children}</div>}
             on={["hover"]}
             position="top center"
             closeOnDocumentClick
