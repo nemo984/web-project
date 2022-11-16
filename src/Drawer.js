@@ -12,9 +12,9 @@ import CreateRoom from "./CreateRoom";
 import ChannelSettings from "./components/ChannelSettings";
 import { useInterval } from "./hooks/useInterval";
 import jwt_decode from "jwt-decode";
+import Settings from "./Setting";
 
 const Drawer = () => {
-    // get from api
     const [channels, setChannels] = useState([]);
 
     const addChannel = (channel) => {
@@ -134,7 +134,7 @@ const Profile = () => {
                 className="mt-3 p-2 shadow menu menu-compact dropdown-content bg-base-100 rounded-box w-52"
             >
                 <li>
-                    <label htmlFor="my-setting">Settings</label>
+                    <Settings />
                 </li>
                 <li onClick={handleLogout}>
                     <a>Logout</a>

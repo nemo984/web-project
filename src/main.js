@@ -6,7 +6,6 @@ export function Main() {
     return (
         <div className="flex">
             <Drawer />
-            <Settings />
             <MeetingRoom />
         </div>
     );

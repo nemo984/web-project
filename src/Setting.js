@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Room } from "livekit-client";
 import {
     setAudioInputDeviceId,
@@ -8,6 +8,7 @@ import {
 import { useDispatch } from "react-redux";
 import "react-tabs/style/react-tabs.css";
 import { Tab, TabList, TabPanel, Tabs } from "react-tabs";
+import Popup from "reactjs-popup";
 
 const Settings = () => {
     const dispatch = useDispatch();
@@ -16,23 +17,48 @@ const Settings = () => {
     const [audioOutputDevices, setAudioOutputDevices] = useState([]);
     const [videoInputDevices, setVideoInputDevices] = useState([]);
 
+    const listAudioDevices = useCallback(async () => {
+        const devices = await Room.getLocalDevices("audioinput");
+        setAudioInputDevices(devices);
+    }, []);
+
+    const listAudioOutputDevices = useCallback(async () => {
+        const devices = await Room.getLocalDevices("audiooutput");
+        setAudioOutputDevices(devices);
+    }, []);
+
+    const listVideoDevices = useCallback(async () => {
+        const devices = await Room.getLocalDevices("videoinput");
+        setVideoInputDevices(devices);
+    }, []);
+
     useEffect(() => {
-        Room.getLocalDevices("audioinput").then((value) => {
-            setAudioInputDevices(value);
+        listAudioDevices();
+        listAudioOutputDevices();
+        listVideoDevices();
+        navigator.mediaDevices.addEventListener("devicechange", () => {
+            listAudioDevices();
+            listAudioOutputDevices();
+            listVideoDevices();
         });
-        Room.getLocalDevices("audiooutput").then((value) => {
-            setAudioOutputDevices(value);
-        });
-        Room.getLocalDevices("videoinput").then((value) => {
-            setVideoInputDevices(value);
-        });
+
+        return () => {
+            navigator.mediaDevices.removeEventListener("devicechange", () => {
+                listAudioDevices();
+                listAudioOutputDevices();
+                listVideoDevices();
+            });
+        };
     }, []);
 
     return (
-        <>
-            <input type="checkbox" id="my-setting" className="modal-toggle" />
-            <div className="modal">
-                <div className="modal-box">
+        <Popup
+            trigger={<a>Settings</a>}
+            contentStyle={{ borderRadius: "20px", maxWidth: "32rem" }}
+            modal
+        >
+            <div className="w-full h-96 p-2">
+                <div className="w-full p-0">
                     <label
                         htmlFor="my-setting"
                         className="btn btn-sm btn-circle absolute right-2 top-2"
@@ -140,15 +166,9 @@ const Settings = () => {
                             </select>
                         </TabPanel>
                     </Tabs>
-
-                    <div className="modal-action">
-                        <label htmlFor="my-setting" className="btn">
-                            Close
-                        </label>
-                    </div>
                 </div>
             </div>
-        </>
+        </Popup>
     );
 };
 
