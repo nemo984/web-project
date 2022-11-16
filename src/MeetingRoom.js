@@ -25,7 +25,7 @@ const MeetingRoom = () => {
             {isInRoom !== "idle" && (
                 <FullScreen
                     handle={handleFullScreen}
-                    className="h-full relative"
+                    className="h-full relative bg-secondary"
                 >
                     <div className="mt-5 h-5/6 w-full">
                         <RoomPage
@@ -148,7 +148,7 @@ const Footer = ({ handleFullScreen, room }) => {
 
     const handleLeaveRoom = () => {
         room.disconnect();
-        dispatch(leaveRoom(room.participants.size - 1));
+        dispatch(leaveRoom());
     };
 
     return (
@@ -418,18 +418,13 @@ export const RoomPage = ({ token, handleFullScreen }) => {
         (state) => state.user.videoInputDeviceId
     );
 
-    const selectedRoomId = useSelector((state) => state.room.selectedRoomId);
+    const isSwitchingRoom = useSelector((state) => state.room.switching);
 
     useEffect(() => {
-        if (room !== null) {
-            console.log("Switching ROoms");
-            const roomId = room.name.split("-")[0];
-            if (selectedRoomId.toString() !== roomId) {
-                console.log("Disconnecting from existing room");
-                room.disconnect();
-            }
+        if (isSwitchingRoom && room !== null) {
+            room.disconnect();
         }
-    }, [selectedRoomId, room]);
+    }, [isSwitchingRoom]);
 
     // change audio input
     useEffect(() => {
@@ -462,10 +457,24 @@ export const RoomPage = ({ token, handleFullScreen }) => {
     }
 
     return (
+        <Room
+            token={token}
+            handleFullScreen={handleFullScreen}
+            onConnected={onConnected}
+        />
+    );
+};
+
+const Room = ({ token, handleFullScreen, onConnected }) => {
+    const dispatch = useDispatch();
+
+    return (
         <LiveKitRoom
             url={url}
             token={token}
             onConnected={(room) => {
+                console.log("trying to connect");
+                console.log(room);
                 onConnected(room);
                 // size not including local participant
                 dispatch(setSelectedRoomInCount(room.participants.size + 1));

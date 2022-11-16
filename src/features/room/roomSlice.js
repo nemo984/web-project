@@ -35,6 +35,7 @@ export const roomSlice = createSlice({
         selectedRoomId: -1,
         selectedRoomInCount: 0,
         isInRoom: false,
+        switching: false,
         currentRoom: {},
         roomToken: "",
         id: "",
@@ -49,9 +50,13 @@ export const roomSlice = createSlice({
             state.currentRoom = room;
             state.loading = "joined";
             state.isInRoom = true;
+            state.switching = false;
         },
-        leaveRoom: (state, action) => {
-            state.selectedRoomInCount = action.payload;
+        leaveRoom: (state) => {
+            state.selectedRoomInCount =
+                state.selectedRoomInCount > 0
+                    ? state.selectedRoomInCount - 1
+                    : 0;
             state.roomId = "";
             state.loading = "idle";
             state.selectedRoomId = -1;
@@ -61,14 +66,16 @@ export const roomSlice = createSlice({
         setSelectedRoomInCount(state, action) {
             state.selectedRoomInCount = action.payload;
         },
-        changeRoom: (state) => {}, // leave room + join room
+        changeRoom: (state) => {
+            state.switching = true;
+        }, // leave room + join room
         shareScreen: (state) => {},
         kickParticipant: (state) => {},
     },
 });
 
 // Action creators are generated for each case reducer function
-export const { joinRoom, leaveRoom, setSelectedRoomInCount } =
+export const { joinRoom, leaveRoom, setSelectedRoomInCount, changeRoom } =
     roomSlice.actions;
 
 export default roomSlice.reducer;

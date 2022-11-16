@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { joinRoom, leaveRoom } from "./features/room/roomSlice";
+import { changeRoom, joinRoom, leaveRoom } from "./features/room/roomSlice";
 import { googleLogout } from "@react-oauth/google";
 import { useNavigate } from "react-router-dom";
 import axiosInstance from "./api/axios";
@@ -239,10 +239,15 @@ const Channel = ({ channel, removeChannel }) => {
     );
 };
 
+function timeout(delay) {
+    return new Promise((res) => setTimeout(res, delay));
+}
+
 const Room = ({ room, isSelected }) => {
     const selectedInRoomCount = useSelector(
         (state) => state.room.selectedRoomInCount
     );
+    const selectedRoomId = useSelector((state) => state.room.selectedRoomId);
 
     const getRoomToken = async () => {
         if (roomToken === "") {
@@ -261,9 +266,15 @@ const Room = ({ room, isSelected }) => {
     return (
         <li
             onClick={() => {
+                if (selectedRoomId !== -1) {
+                    dispatch(changeRoom());
+                }
                 getRoomToken().then((token) => {
                     dispatch(leaveRoom());
-                    dispatch(joinRoom({ token, room }));
+                    // TODO: find a better way,
+                    timeout(200).then(() =>
+                        dispatch(joinRoom({ token, room }))
+                    );
                 });
             }}
         >
