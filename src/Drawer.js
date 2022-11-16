@@ -240,6 +240,10 @@ const Channel = ({ channel, removeChannel }) => {
 };
 
 const Room = ({ room, isSelected }) => {
+    const selectedInRoomCount = useSelector(
+        (state) => state.room.selectedRoomInCount
+    );
+
     const getRoomToken = async () => {
         if (roomToken === "") {
             const res = await axiosInstance.get(
@@ -278,7 +282,7 @@ const Room = ({ room, isSelected }) => {
             >
                 <div className="indicator">
                     <span className="indicator-item badge badge-secondary">
-                        {room.in_room}
+                        {!isSelected ? room.in_room : selectedInRoomCount}
                     </span>
                     {room.name}
                 </div>

@@ -2,7 +2,7 @@ import { useRef } from "react";
 import { useState } from "react";
 import { FullScreen, useFullScreenHandle } from "react-full-screen";
 import { useSelector, useDispatch } from "react-redux";
-import { leaveRoom } from "./features/room/roomSlice";
+import { leaveRoom, setSelectedRoomInCount } from "./features/room/roomSlice";
 import { useRoom, useParticipant } from "@livekit/react-core";
 import { useEffect } from "react";
 
@@ -148,7 +148,7 @@ const Footer = ({ handleFullScreen, room }) => {
 
     const handleLeaveRoom = () => {
         room.disconnect();
-        dispatch(leaveRoom());
+        dispatch(leaveRoom(room.participants.size - 1));
     };
 
     return (
@@ -406,6 +406,7 @@ const Footer = ({ handleFullScreen, room }) => {
 };
 
 export const RoomPage = ({ token, handleFullScreen }) => {
+    const dispatch = useDispatch();
     const [room, setRoom] = useState(null);
     const audioInputDeviceId = useSelector(
         (state) => state.user.audioInputDeviceId
@@ -464,7 +465,23 @@ export const RoomPage = ({ token, handleFullScreen }) => {
         <LiveKitRoom
             url={url}
             token={token}
-            onConnected={onConnected}
+            onConnected={(room) => {
+                onConnected(room);
+                // size not including local participant
+                dispatch(setSelectedRoomInCount(room.participants.size + 1));
+                room.addListener("participantConnected", () => {
+                    console.log("someone connected");
+                    dispatch(
+                        setSelectedRoomInCount(room.participants.size + 1)
+                    );
+                });
+                room.addListener("participantDisconnected", () =>
+                    dispatch(setSelectedRoomInCount(room.participants.size + 1))
+                );
+            }}
+            onLeave={(room) =>
+                dispatch(setSelectedRoomInCount(room.participants - 1))
+            }
             // controlRenderer renders the control bar
             controlRenderer={(props) => {
                 return (
