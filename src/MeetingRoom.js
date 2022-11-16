@@ -460,27 +460,22 @@ export const RoomPage = ({ token, handleFullScreen }) => {
         setRoom(room);
     }
 
-    const getRoomComponent = (token) => {
-        return (
-            <LiveKitRoom
-                url={url}
-                token={token}
-                onConnected={onConnected}
-                // controlRenderer renders the control bar
-                controlRenderer={(props) => {
-                    return (
-                        <Footer
-                            room={props.room}
-                            handleFullScreen={handleFullScreen}
-                        />
-                    );
-                }}
-            />
-        );
-    };
-    const Room = getRoomComponent(token);
-
-    return <div className="roomContainer">{Room}</div>;
+    return (
+        <LiveKitRoom
+            url={url}
+            token={token}
+            onConnected={onConnected}
+            // controlRenderer renders the control bar
+            controlRenderer={(props) => {
+                return (
+                    <Footer
+                        room={props.room}
+                        handleFullScreen={handleFullScreen}
+                    />
+                );
+            }}
+        />
+    );
 };
 
 export default MeetingRoom;
