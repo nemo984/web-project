@@ -2,11 +2,18 @@ from rest_framework import serializers
 from .models import Channel, Room, ChannelMember
 from django.contrib.auth.models import User
 from django.contrib.auth.hashers import make_password 
+from meet.services import get_in_room_count
 
 class RoomSerializer(serializers.ModelSerializer):
+    in_room = serializers.SerializerMethodField('get_in_room')
+
+    def get_in_room(self, room):
+      return get_in_room_count(room)
+
     class Meta:
         model = Room
-        fields = "__all__"
+        fields = [field.name for field in model._meta.fields]
+        fields.append('in_room')
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -24,6 +31,7 @@ class ChannelMemberSerializer(serializers.ModelSerializer):
 class ChannelSerializer(serializers.ModelSerializer):
     owner = UserSerializer(required=False)
     members = ChannelMemberSerializer(source='channelmember_set', many=True, required=False)
+    rooms = RoomSerializer(many=True, required=False)
     class Meta:
         model = Channel
         fields = [field.name for field in model._meta.fields]

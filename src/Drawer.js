@@ -10,6 +10,7 @@ import { Collapse } from "react-collapse";
 import ToolTip from "./common/ToolTip";
 import CreateRoom from "./CreateRoom";
 import ChannelSettings from "./components/ChannelSettings";
+import { useInterval } from "./hooks/useInterval";
 import jwt_decode from "jwt-decode";
 
 const Drawer = () => {
@@ -27,6 +28,10 @@ const Drawer = () => {
     const getChannels = () => {
         axiosInstance.get("/me/channels/").then((res) => setChannels(res.data));
     };
+
+    useInterval(() => {
+        getChannels();
+    }, 10000);
 
     useEffect(() => {
         getChannels();
@@ -273,7 +278,7 @@ const Room = ({ room, isSelected }) => {
             >
                 <div className="indicator">
                     <span className="indicator-item badge badge-secondary">
-                        {isSelected ? 1 : 0}
+                        {room.in_room}
                     </span>
                     {room.name}
                 </div>

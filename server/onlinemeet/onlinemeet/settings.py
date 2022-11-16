@@ -53,10 +53,10 @@ SECRET_KEY = 'django-insecure-1fmlsf7c)&k85%=s&6@5&n%_#89(%v1@kvrcehw8zgrye5%7-&
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['192.168.0.104', '127.0.0.1']
+ALLOWED_HOSTS = ['192.168.0.104', '127.0.0.1', 'localhost']
 
 
-# Application definition
+# Application efinition
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -190,5 +190,6 @@ SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE = [
     'https://www.googleapis.com/auth/userinfo.profile',
 ]
 
+LIVEKIT_API_URL = os.environ.get('LIVEKIT_API_URL')
 LIVEKIT_API_KEY = os.environ.get('LIVEKIT_API_KEY')
 LIVEKIT_API_SECRET = os.environ.get('LIVEKIT_API_SECRET')

@@ -130,5 +130,5 @@ class ChannelRoomToken(APIView):
             return Response({"message": "Room Not Found"}, status=status.HTTP_404_NOT_FOUND)
 
         name = f'{request.user.first_name} {request.user.last_name}' if request.user.first_name != "" else request.user.username 
-        token = services.create_room_token(f'{room.id}-{channel.name}-{room.name}', name)
+        token = services.create_room_token(room, name)
         return Response({"token": token}, status=status.HTTP_200_OK)

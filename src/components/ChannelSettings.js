@@ -157,6 +157,7 @@ const MembersTab = ({ channel }) => {
                         id="copyMe"
                         value={inviteLink}
                         spellcheck="false"
+                        onFocus={(event) => event.target.select()}
                         readonly
                     />
                     <button
