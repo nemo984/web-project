@@ -25,7 +25,7 @@ const MeetingRoom = () => {
             {isInRoom !== "idle" && (
                 <FullScreen
                     handle={handleFullScreen}
-                    className="h-full relative bg-secondary"
+                    className="h-full relative bg-slate-100"
                 >
                     <div className="mt-5 h-5/6 w-full">
                         <RoomPage
@@ -125,6 +125,7 @@ const Participant = ({ participant, showAvatar, videoRef, me }) => {
 };
 
 const Footer = ({ handleFullScreen, room }) => {
+    // need so that ui will rerender
     const [isMicrophoneEnabled, setIsMicrophoneEnabled] = useState(true);
     const [isCameraEnabled, setIsCameraEnabled] = useState(false);
 
@@ -148,6 +149,7 @@ const Footer = ({ handleFullScreen, room }) => {
 
     const handleLeaveRoom = () => {
         room.disconnect();
+        dispatch(setSelectedRoomInCount(room.participants.size));
         dispatch(leaveRoom());
     };
 
@@ -155,7 +157,7 @@ const Footer = ({ handleFullScreen, room }) => {
         <div className="flex justify-center mt-5 p-5 bg-slate-600 w-full fixed bottom-0">
             <div className="btn-group">
                 <button className="btn" onClick={toggleMicrophone}>
-                    {isMicrophoneEnabled ? (
+                    {room.localParticipant.isMicrophoneEnabled ? (
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
                             className="swap-on fill-current icon icon-tabler icon-tabler-microphone"
@@ -211,7 +213,7 @@ const Footer = ({ handleFullScreen, room }) => {
                     )}
                 </button>
                 <button className="btn" onClick={toggleCamera}>
-                    {isCameraEnabled ? (
+                    {room.localParticipant.isCameraEnabled ? (
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
                             className="swap-on fill-current icon icon-tabler icon-tabler-video"
@@ -406,8 +408,8 @@ const Footer = ({ handleFullScreen, room }) => {
 };
 
 export const RoomPage = ({ token, handleFullScreen }) => {
-    const dispatch = useDispatch();
     const [room, setRoom] = useState(null);
+    const dispatch = useDispatch();
     const audioInputDeviceId = useSelector(
         (state) => state.user.audioInputDeviceId
     );
@@ -473,13 +475,11 @@ const Room = ({ token, handleFullScreen, onConnected }) => {
             url={url}
             token={token}
             onConnected={(room) => {
-                console.log("trying to connect");
                 console.log(room);
                 onConnected(room);
                 // size not including local participant
                 dispatch(setSelectedRoomInCount(room.participants.size + 1));
                 room.addListener("participantConnected", () => {
-                    console.log("someone connected");
                     dispatch(
                         setSelectedRoomInCount(room.participants.size + 1)
                     );
@@ -488,9 +488,6 @@ const Room = ({ token, handleFullScreen, onConnected }) => {
                     dispatch(setSelectedRoomInCount(room.participants.size + 1))
                 );
             }}
-            onLeave={(room) =>
-                dispatch(setSelectedRoomInCount(room.participants - 1))
-            }
             // controlRenderer renders the control bar
             controlRenderer={(props) => {
                 return (

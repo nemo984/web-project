@@ -15,6 +15,7 @@ import jwt_decode from "jwt-decode";
 import Settings from "./Setting";
 
 const Drawer = () => {
+    const [isInFocus, setIsInFocus] = useState(true);
     const [channels, setChannels] = useState([]);
 
     const addChannel = (channel) => {
@@ -30,11 +31,20 @@ const Drawer = () => {
     };
 
     useInterval(() => {
-        getChannels();
+        if (isInFocus) {
+            getChannels();
+        }
     }, 10000);
 
     useEffect(() => {
         getChannels();
+        window.addEventListener("focus", () => setIsInFocus(true));
+        window.addEventListener("blur", () => setIsInFocus(false));
+
+        return () => {
+            window.removeEventListener("focus", () => setIsInFocus(true));
+            window.removeEventListener("blur", () => setIsInFocus(false));
+        };
     }, []);
 
     return (
@@ -266,6 +276,9 @@ const Room = ({ room, isSelected }) => {
     return (
         <li
             onClick={() => {
+                if (selectedRoomId === room.id) {
+                    return;
+                }
                 if (selectedRoomId !== -1) {
                     dispatch(changeRoom());
                 }
