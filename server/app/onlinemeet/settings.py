@@ -55,6 +55,11 @@ DEBUG = int(os.environ.get("DEBUG", default=0))
 
 ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS").split(" ")
 
+CSRF_TRUSTED_ORIGINS = os.environ.get("CSRF_TRUSTED_ORIGINS").split(" ")
+
+CORS_ORIGIN_WHITELIST = os.environ.get("CSRF_TRUSTED_ORIGINS").split(" ")
+
+CSRF_COOKIE_SECURE = False
 
 # Application efinition
 
