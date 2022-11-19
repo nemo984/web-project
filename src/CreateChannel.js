@@ -56,37 +56,40 @@ const CreateChannel = ({ addChannel }) => {
                             <p className="text-2xl font-extrabold text-lg grid justify-items-center">
                                 Create Channel
                             </p>
-                            <div className="form-control">
-                                <label className="label">
-                                    <span className="label-text font-bold">
-                                        CHANNEL NAME
-                                    </span>
-                                </label>
-                                <label className="input-group">
-                                    <input
-                                        ref={channelNameInputRef}
-                                        type="text"
-                                        className="input input-bordered w-full"
-                                    />
-                                </label>
-                            </div>
-                            <div className="modal-action">
-                                <label
-                                    className="btn grid justify-items-start"
-                                    onClick={close}
-                                >
-                                    Close
-                                </label>
-                                <label
-                                    className="btn"
-                                    onClick={() => {
-                                        createChannel();
-                                        close();
-                                    }}
-                                >
-                                    Create
-                                </label>
-                            </div>
+                            <form
+                                onSubmit={(e) => {
+                                    e.preventDefault();
+                                    createChannel();
+                                    close();
+                                }}
+                            >
+                                <div className="form-control">
+                                    <label className="label">
+                                        <span className="label-text font-bold">
+                                            CHANNEL NAME
+                                        </span>
+                                    </label>
+                                    <label className="input-group">
+                                        <input
+                                            ref={channelNameInputRef}
+                                            type="text"
+                                            className="input input-bordered w-full"
+                                        />
+                                    </label>
+                                </div>
+                                <div className="modal-action">
+                                    <button
+                                        className="btn grid justify-items-start"
+                                        onClick={close}
+                                        type="button"
+                                    >
+                                        Close
+                                    </button>
+                                    <button className="btn" type="submit">
+                                        Create
+                                    </button>
+                                </div>
+                            </form>
                         </div>
                     </div>
                 </div>

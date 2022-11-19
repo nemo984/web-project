@@ -42,37 +42,40 @@ const CreateRoom = ({ addRoom, channelId }) => {
                         <p className="text-2xl font-extrabold text-lg grid justify-items-center">
                             Create Room
                         </p>
-                        <div className="form-control">
-                            <label className="label">
-                                <span className="label-text font-bold">
-                                    ROOM NAME
-                                </span>
-                            </label>
-                            <label className="input-group">
-                                <input
-                                    ref={roomNameInputRef}
-                                    type="text"
-                                    className="input input-bordered w-full"
-                                />
-                            </label>
-                        </div>
-                        <div className="modal-action">
-                            <label
-                                className="btn grid justify-items-start"
-                                onClick={close}
-                            >
-                                Close
-                            </label>
-                            <label
-                                className="btn"
-                                onClick={() => {
-                                    createRoom();
-                                    close();
-                                }}
-                            >
-                                Create
-                            </label>
-                        </div>
+                        <form
+                            onSubmit={(e) => {
+                                e.preventDefault();
+                                createRoom();
+                                close();
+                            }}
+                        >
+                            <div className="form-control">
+                                <label className="label">
+                                    <span className="label-text font-bold">
+                                        ROOM NAME
+                                    </span>
+                                </label>
+                                <label className="input-group">
+                                    <input
+                                        ref={roomNameInputRef}
+                                        type="text"
+                                        className="input input-bordered w-full"
+                                    />
+                                </label>
+                            </div>
+                            <div className="modal-action">
+                                <button
+                                    className="btn grid justify-items-start"
+                                    onClick={close}
+                                    type="button"
+                                >
+                                    Close
+                                </button>
+                                <button className="btn" type="submit">
+                                    Create
+                                </button>
+                            </div>
+                        </form>
                     </div>
                 </div>
             )}
