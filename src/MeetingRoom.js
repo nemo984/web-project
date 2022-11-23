@@ -1,9 +1,7 @@
-import { useRef } from "react";
 import { useState } from "react";
 import { FullScreen, useFullScreenHandle } from "react-full-screen";
 import { useSelector, useDispatch } from "react-redux";
 import { leaveRoom, setSelectedRoomInCount } from "./features/room/roomSlice";
-import { useRoom, useParticipant } from "@livekit/react-core";
 import { useEffect } from "react";
 
 import "@livekit/react-components/dist/index.css";
@@ -138,6 +136,7 @@ const Footer = ({ handleFullScreen, room }) => {
     };
 
     const toggleMicrophone = async () => {
+        console.log(room);
         await room.localParticipant.setMicrophoneEnabled(!isMicrophoneEnabled);
         setIsMicrophoneEnabled((prevState) => !prevState);
     };
@@ -409,7 +408,6 @@ const Footer = ({ handleFullScreen, room }) => {
 
 export const RoomPage = ({ token, handleFullScreen }) => {
     const [room, setRoom] = useState(null);
-    const dispatch = useDispatch();
     const audioInputDeviceId = useSelector(
         (state) => state.user.audioInputDeviceId
     );
@@ -487,6 +485,9 @@ const Room = ({ token, handleFullScreen, onConnected }) => {
                 room.addListener("participantDisconnected", () =>
                     dispatch(setSelectedRoomInCount(room.participants.size + 1))
                 );
+                room.addListener("disconnected", () => {
+                    dispatch(leaveRoom());
+                });
             }}
             // controlRenderer renders the control bar
             controlRenderer={(props) => {

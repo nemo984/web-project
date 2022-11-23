@@ -1,5 +1,8 @@
 from django.db import models
 from django.conf import settings
+from django.db.models.signals import pre_delete
+from django.dispatch import receiver
+from .services import delete_room
 import random, string
 import time
 
@@ -51,3 +54,6 @@ class Room(models.Model):
     class Meta:
         ordering = ('created',)
 
+@receiver(pre_delete, sender=Room)
+def deleteLivekitRoom(sender, instance, **kwargs):  
+    delete_room(instance)

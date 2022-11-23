@@ -31,6 +31,24 @@ services:
         depends_on:
             - web
 
+    livekit:
+        image: livekit-server:v1.3
+
+    redis:
+        image: redis:6.0.9
+        container_name: redis
+        hostname: redis
+        expose:
+            - 6379
+        ports:
+            - 6380:6379
+            - 6379:6379
+        networks:
+            - livekit_network
+
 volumes:
     postgres_data:
     static_volume:
+
+networks:
+    livekit_network:

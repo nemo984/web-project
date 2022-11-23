@@ -26,6 +26,17 @@ const Drawer = () => {
         setChannels((channels) => channels.filter((c) => c.id !== channelId));
     };
 
+    const editChannel = (channel) => {
+        setChannels((channels) =>
+            channels.map((ch) => {
+                if (ch.id === channel.id) {
+                    return channel;
+                }
+                return ch;
+            })
+        );
+    };
+
     const getChannels = () => {
         axiosInstance.get("/me/channels/").then((res) => setChannels(res.data));
     };
@@ -49,7 +60,7 @@ const Drawer = () => {
 
     return (
         <>
-            <div className="drawer max-w-md">
+            <div className="drawer">
                 <input
                     id="my-drawer"
                     type="checkbox"
@@ -70,8 +81,8 @@ const Drawer = () => {
                         className="drawer-overlay"
                     ></label>
                     <ul
-                        className="menu p-4 overflow-y-auto scrollbar scrollbar-thumb-gray-900 scrollbar-track-gray-100 
- bg-base-100 text-base-content bg-primary flex flex-col justify-between"
+                        className="menu p-4 overflow-y-auto scrollbar scrollbar-thumb-slate-700 scrollbar-track-slate-300 
+ bg-base-100 text-base-content bg-primary flex flex-col justify-between overflow-x-hidden"
                     >
                         <div className="mt-5">
                             <div>
@@ -82,6 +93,7 @@ const Drawer = () => {
                                     key={channel.id}
                                     channel={channel}
                                     removeChannel={removeChannel}
+                                    editChannel={editChannel}
                                 />
                             ))}
                             <CreateChannel addChannel={addChannel} />
@@ -157,7 +169,7 @@ const Profile = () => {
     );
 };
 
-const Channel = ({ channel, removeChannel }) => {
+const Channel = ({ channel, removeChannel, editChannel }) => {
     const [isCollapseOpen, setIsCollapseOpen] = useState(false);
     const [rooms, setRooms] = useState([]);
     const selectedRoomId = useSelector((state) => state.room.selectedRoomId);
@@ -227,6 +239,7 @@ const Channel = ({ channel, removeChannel }) => {
                     <ChannelSettings
                         channel={channel}
                         removeChannel={removeChannel}
+                        editChannel={editChannel}
                     />
                 </ToolTip>
 
@@ -311,24 +324,22 @@ const Room = ({ room, isSelected }) => {
                     {room.name}
                 </div>
 
-                <button
-                    className="btn btn-square btn-ghost"
-                    onClick={(e) => e.stopPropagation()}
-                >
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        className="inline-block w-5 h-5 stroke-current"
+                <div className="dropdown dropdown-right">
+                    <label tabIndex={0} className="btn m-1">
+                        Click
+                    </label>
+                    <ul
+                        tabIndex={0}
+                        className="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52"
                     >
-                        <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth="2"
-                            d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z"
-                        ></path>
-                    </svg>
-                </button>
+                        <li>
+                            <a>Item 1</a>
+                        </li>
+                        <li>
+                            <a>Item 2</a>
+                        </li>
+                    </ul>
+                </div>
             </div>
         </li>
     );

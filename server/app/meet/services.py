@@ -15,10 +15,16 @@ def create_room_token(room, name) -> str:
     access_token = AccessToken(settings.LIVEKIT_API_KEY, settings.LIVEKIT_API_SECRET, grant=grant, identity=name, metadata="HAHHA") # TTL, ..
     return access_token.to_jwt()
 
+
+client = RoomServiceClient(settings.LIVEKIT_API_URL, settings.LIVEKIT_API_KEY, settings.LIVEKIT_API_SECRET)
+
 # polling or ws?
 # Another solution: USe livekit webhooks, notify current users in channel via websockets 
 def get_in_room_count(room) -> int:
-    client = RoomServiceClient(settings.LIVEKIT_API_URL, settings.LIVEKIT_API_KEY, settings.LIVEKIT_API_SECRET)
     room_name = create_room_identifier(room)
     participants = client.list_participants(room_name)
     return len(participants)
+
+def delete_room(room):
+    room_name = create_room_identifier(room)
+    client.delete_room(room_name)
