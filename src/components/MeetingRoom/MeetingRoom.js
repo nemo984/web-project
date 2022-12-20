@@ -1,9 +1,8 @@
 import { useState } from "react";
 import { FullScreen, useFullScreenHandle } from "react-full-screen";
 import { useSelector, useDispatch } from "react-redux";
-import { leaveRoom, setSelectedRoomInCount } from "./features/room/roomSlice";
+import { leaveRoom, setSelectedRoomInCount } from "../../features/roomSlice";
 import { useEffect } from "react";
-
 import "@livekit/react-components/dist/index.css";
 import "react-aspect-ratio/aspect-ratio.css";
 import { LiveKitRoom } from "@livekit/react-components";
@@ -11,7 +10,6 @@ import { LiveKitRoom } from "@livekit/react-components";
 const url = process.env.REACT_APP_LIVEKIT_URL;
 
 const MeetingRoom = () => {
-    const room = useSelector((state) => state.room.currentRoom);
     const roomToken = useSelector((state) => state.room.roomToken);
     const isInRoom = useSelector((state) => state.room.loading);
 
@@ -19,7 +17,6 @@ const MeetingRoom = () => {
 
     return (
         <div className="h-screen w-full bg-slate-100 overflow-hidden">
-            {JSON.stringify(room)}
             {isInRoom !== "idle" && (
                 <FullScreen
                     handle={handleFullScreen}
@@ -32,91 +29,6 @@ const MeetingRoom = () => {
                         />
                     </div>
                 </FullScreen>
-            )}
-        </div>
-    );
-};
-
-const Participant = ({ participant, showAvatar, videoRef, me }) => {
-    const [isHovering, setIsHovering] = useState(false);
-
-    return (
-        <div
-            className={
-                "m-2 h-64 w-80 bg-neutral flex items-center justify-center border-8 border-lime-400 rounded-3xl " +
-                (me ? "absolute bottom-0 right-0" : "relative")
-            }
-            onMouseOver={() => setIsHovering(true)}
-            onMouseOut={() => setIsHovering(false)}
-        >
-            {showAvatar ? (
-                <div className="avatar placeholder">
-                    <div className="bg-neutral-focus text-neutral-content rounded-full w-24">
-                        <span className="text-3xl">{participant.initials}</span>
-                    </div>
-                </div>
-            ) : (
-                <>
-                    <video
-                        className="w-full h-full"
-                        id="video"
-                        controls="controls"
-                        preload="none"
-                        ref={videoRef}
-                    >
-                        <source
-                            id="mp4"
-                            src="http://media.w3.org/2010/05/sintel/trailer.mp4"
-                            type="video/mp4"
-                        />
-                    </video>
-                    <audio></audio>
-                </>
-            )}
-            <div className="absolute bottom-4 left-3 text-secondary">
-                {participant.fullName}
-            </div>
-
-            {isHovering && (
-                <div className="absolute top-0 right-0">
-                    <div className="dropdown dropdown-right">
-                        <label tabIndex={0} className="btn m-1">
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                className="icon icon-tabler icon-tabler-dots cursor-pointer"
-                                width="24"
-                                height="24"
-                                viewBox="0 0 24 24"
-                                color="white"
-                                strokeWidth="2"
-                                stroke="currentColor"
-                                fill="none"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                            >
-                                <path
-                                    stroke="none"
-                                    d="M0 0h24v24H0z"
-                                    fill="none"
-                                ></path>
-                                <circle cx="5" cy="12" r="1"></circle>
-                                <circle cx="12" cy="12" r="1"></circle>
-                                <circle cx="19" cy="12" r="1"></circle>
-                            </svg>
-                        </label>
-                        <ul
-                            tabIndex={0}
-                            className="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52"
-                        >
-                            <li>
-                                <a>Pin</a>
-                            </li>
-                            <li>
-                                <a>Kick</a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
             )}
         </div>
     );

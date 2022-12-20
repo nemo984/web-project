@@ -12,7 +12,6 @@ export const channelSlice = createSlice({
     },
 });
 
-// Action creators are generated for each case reducer function
 export const { createChannelEvent } = channelSlice.actions;
 
 export default channelSlice.reducer;

@@ -1,20 +1,20 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { changeRoom, joinRoom, leaveRoom } from "./features/room/roomSlice";
+import { changeRoom, joinRoom, leaveRoom } from "../../features/roomSlice";
 import { googleLogout } from "@react-oauth/google";
 import { useNavigate } from "react-router-dom";
-import axiosInstance from "./api/axios";
+import axiosInstance from "../../api/axios";
 import axios from "axios";
-import CreateChannel from "./CreateChannel";
+import CreateChannel from "../Popup/CreateChannel";
 import { Collapse } from "react-collapse";
-import ToolTip from "./common/ToolTip";
-import CreateRoom from "./CreateRoom";
-import ChannelSettings from "./components/ChannelSettings";
-import { useInterval } from "./hooks/useInterval";
-import jwt_decode from "jwt-decode";
-import Settings from "./Setting";
+import ToolTip from "../common/ToolTip";
+import CreateRoom from "../Popup/CreateRoom";
+import ChannelSettings from "../Popup/ChannelSettings";
+import { useInterval } from "../../hooks/useInterval";
+import UserSettings from "../Popup/UserSettings";
+import "./drawer.css";
 
-const Drawer = () => {
+const Sidebar = () => {
     const [isInFocus, setIsInFocus] = useState(true);
     const [channels, setChannels] = useState([]);
 
@@ -82,7 +82,7 @@ const Drawer = () => {
                     ></label>
                     <ul
                         className="menu p-4 overflow-y-auto scrollbar scrollbar-thumb-slate-700 scrollbar-track-slate-300 
- bg-base-100 text-base-content bg-primary flex flex-col justify-between overflow-x-hidden"
+text-base-content bg-cyan-800 flex flex-col justify-between overflow-x-hidden"
                     >
                         <div className="mt-5">
                             <div>
@@ -156,7 +156,7 @@ const Profile = () => {
                 className="mt-3 p-2 shadow menu menu-compact dropdown-content bg-base-100 rounded-box w-52"
             >
                 <li>
-                    <Settings />
+                    <UserSettings />
                 </li>
                 <li onClick={handleLogout}>
                     <a>Logout</a>
@@ -297,7 +297,6 @@ const Room = ({ room, isSelected }) => {
                 }
                 getRoomToken().then((token) => {
                     dispatch(leaveRoom());
-                    // TODO: find a better way,
                     timeout(200).then(() =>
                         dispatch(joinRoom({ token, room }))
                     );
@@ -305,12 +304,11 @@ const Room = ({ room, isSelected }) => {
             }}
         >
             <div
-                className="border-none flex justify-between text-ellipsis p-0 ml-3 pl-2"
+                className="border-none flex justify-between text-ellipsis p-0 ml-3 pl-2 h-10"
                 style={{
                     backgroundColor: "hsl(var(--bc) / var(--tw-bg-opacity))",
                     "--tw-bg-opacity": isSelected ? "0.3" : "0",
                     "&:hover": {
-                        // TODO: bug
                         backgroundColor:
                             "hsl(var(--bc) / var(--tw-bg-opacity))",
                         "--tw-bg-opacity": "0.1",
@@ -318,31 +316,38 @@ const Room = ({ room, isSelected }) => {
                 }}
             >
                 <div className="indicator">
-                    <span className="indicator-item badge badge-secondary">
-                        {!isSelected ? room.in_room : selectedInRoomCount}
+                    <span className="indicator-item indicator-middle badge">
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="icon icon-tabler icon-tabler-users mr-1"
+                            width="13"
+                            height="13"
+                            viewBox="0 0 24 24"
+                            strokeWidth="2"
+                            stroke="currentColor"
+                            fill="none"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                        >
+                            <path
+                                stroke="none"
+                                d="M0 0h24v24H0z"
+                                fill="none"
+                            ></path>
+                            <circle cx="9" cy="7" r="4"></circle>
+                            <path d="M3 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2"></path>
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                            <path d="M21 21v-2a4 4 0 0 0 -3 -3.85"></path>
+                        </svg>
+                        <div className="text-white">
+                            {!isSelected ? room.in_room : selectedInRoomCount}
+                        </div>
                     </span>
-                    {room.name}
-                </div>
-
-                <div className="dropdown dropdown-right">
-                    <label tabIndex={0} className="btn m-1">
-                        Click
-                    </label>
-                    <ul
-                        tabIndex={0}
-                        className="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52"
-                    >
-                        <li>
-                            <a>Item 1</a>
-                        </li>
-                        <li>
-                            <a>Item 2</a>
-                        </li>
-                    </ul>
+                    <div className="mr-7">{room.name}</div>
                 </div>
             </div>
         </li>
     );
 };
 
-export default Drawer;
+export default Sidebar;

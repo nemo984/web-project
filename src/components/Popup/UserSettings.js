@@ -4,7 +4,7 @@ import {
     setAudioInputDeviceId,
     setAudioOutputDeviceId,
     setVideoInputDeviceId,
-} from "./features/userSlice";
+} from "../../features/userSlice";
 import { useDispatch } from "react-redux";
 import "react-tabs/style/react-tabs.css";
 import { Tab, TabList, TabPanel, Tabs } from "react-tabs";
@@ -59,12 +59,6 @@ const Settings = () => {
         >
             <div className="w-full h-96 p-2">
                 <div className="w-full p-0">
-                    <label
-                        htmlFor="my-setting"
-                        className="btn btn-sm btn-circle absolute right-2 top-2"
-                    >
-                        ✕
-                    </label>
                     <Tabs>
                         <TabList>
                             <Tab>
@@ -152,17 +146,6 @@ const Settings = () => {
                                         {device.label}
                                     </option>
                                 ))}
-                            </select>
-                            <h3 className="font-bold text-lg">
-                                Virtual background
-                            </h3>
-                            <select className="select w-full max-w-xs">
-                                <option disabled selected>
-                                    Pick your camera
-                                </option>
-                                <option>Default</option>
-                                <option>1</option>
-                                <option>2</option>
                             </select>
                         </TabPanel>
                     </Tabs>

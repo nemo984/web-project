@@ -1,4 +1,4 @@
-import Login from "./login";
+import Login from "./components/Login";
 import {
     BrowserRouter,
     Navigate,
@@ -10,7 +10,7 @@ import {
     useParams,
 } from "react-router-dom";
 
-import Main from "./main";
+import Main from "./components/Main";
 import axiosInstance from "./api/axios";
 import { useEffect } from "react";
 function App() {

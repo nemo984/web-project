@@ -1,6 +1,6 @@
 import React from "react";
 import Popup from "reactjs-popup";
-import axiosInstance from "./api/axios";
+import axiosInstance from "../../api/axios";
 
 const CreateChannel = ({ addChannel }) => {
     const channelNameInputRef = React.useRef();

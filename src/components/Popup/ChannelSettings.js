@@ -1,15 +1,13 @@
-import React, { useMemo } from "react";
+import React from "react";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 import "react-tabs/style/react-tabs.css";
 import "reactjs-popup/dist/index.css";
 import Popup from "reactjs-popup";
-import { toast, ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import axiosInstance from "../api/axios";
+import axiosInstance from "../../api/axios";
 import ToolTip from "../common/ToolTip";
-import { json } from "react-router-dom";
 import { useRef } from "react";
-import { calculateNewValue } from "@testing-library/user-event/dist/utils";
 
 const ChannelSettings = ({ channel, removeChannel, editChannel }) => {
     return (

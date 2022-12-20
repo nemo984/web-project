@@ -1,5 +1,5 @@
 import { configureStore } from "@reduxjs/toolkit";
-import roomReducer from "./features/room/roomSlice";
+import roomReducer from "./features/roomSlice";
 import channelReducer from "./features/channelSlice";
 import userReducer from "./features/userSlice";
 

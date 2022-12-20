@@ -1,6 +1,6 @@
-import Drawer from "./Drawer";
-import MeetingRoom from "./MeetingRoom";
-import "./drawer.css";
+import Sidebar from "./Sidebar/Sidebar";
+import MeetingRoom from "./MeetingRoom/MeetingRoom";
+import "./Sidebar/drawer.css";
 import { useEffect, useRef } from "react";
 
 export function Main() {
@@ -38,7 +38,7 @@ export function Main() {
         <div className="wrapper">
             <div className="container w-full">
                 <div className="sidebar" ref={sidebarRef}>
-                    <Drawer />
+                    <Sidebar />
                 </div>
                 <div ref={resizerRef} className="resizer"></div>
                 <div className="main">
