@@ -1,15 +1,8 @@
 # In Progress
+
 For web programming class
 
 ![image](https://user-images.githubusercontent.com/52666539/205256187-5ab02b4f-fb7f-4aad-b8d1-8ddcb98ecaf7.png)
-
-# TODO
-- Refactor
-  - Refactor react components, one file for each component, break up large components
-  - Structure react components, rename files using best practices
-  - Cleanup folders, group related components together
-  - Remove unused variables, files, etc.
-
 
 # Local Development
 

@@ -3,15 +3,18 @@ import { useDispatch, useSelector } from "react-redux";
 import { changeRoom, joinRoom, leaveRoom } from "../../features/roomSlice";
 import axiosInstance from "../../api/axios";
 import { timeout } from "./Sidebar";
-import "./drawer.css";
-import ChannelSettings from "../Popup/ChannelSettings";
-import RoomSettings from "../Popup/RoomSettings";
 
-const Room = ({ room, isSelected }) => {
+const Room = ({ room, isSelected, deleteRoomId }) => {
     const selectedInRoomCount = useSelector(
         (state) => state.room.selectedRoomInCount
     );
     const selectedRoomId = useSelector((state) => state.room.selectedRoomId);
+
+    const deleteRoom = async (e) => {
+        e.stopPropagation();
+        await axiosInstance.delete(`/rooms/${room.id}`);
+        deleteRoomId(room.id);
+    };
 
     const getRoomToken = async () => {
         if (roomToken === "") {
@@ -24,6 +27,7 @@ const Room = ({ room, isSelected }) => {
         }
         return roomToken;
     };
+
     const [roomToken, setRoomToken] = useState("");
     const dispatch = useDispatch();
 
@@ -46,8 +50,8 @@ const Room = ({ room, isSelected }) => {
         >
             <div
                 className={
-                    "border-none hover:bg-cyan-700 flex justify-between text-ellipsis p-3 ml-3 pl-2 h-10 " +
-                    (isSelected ? "bg-cyan-900" : "")
+                    "group/item border-none flex justify-between text-ellipsis p-3 ml-3 pl-2 h-10 " +
+                    (isSelected ? "bg-cyan-900" : "hover:bg-cyan-700")
                 }
             >
                 <div className="indicator">
@@ -80,7 +84,34 @@ const Room = ({ room, isSelected }) => {
                     </span>
                     <div className="mr-7">{room.name}</div>
                 </div>
-                <RoomSettings />
+                <div
+                    className="group/edit invisible  group-hover/item:visible"
+                    onClick={deleteRoom}
+                >
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        class="icon icon-tabler icon-tabler-trash"
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        strokeWidth="2"
+                        stroke="currentColor"
+                        fill="none"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                    >
+                        <path
+                            stroke="none"
+                            d="M0 0h24v24H0z"
+                            fill="none"
+                        ></path>
+                        <line x1="4" y1="7" x2="20" y2="7"></line>
+                        <line x1="10" y1="11" x2="10" y2="17"></line>
+                        <line x1="14" y1="11" x2="14" y2="17"></line>
+                        <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12"></path>
+                        <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3"></path>
+                    </svg>
+                </div>
             </div>
         </li>
     );

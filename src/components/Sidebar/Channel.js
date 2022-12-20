@@ -15,6 +15,10 @@ const Channel = ({ channel, removeChannel, editChannel }) => {
         setRooms((prevState) => [...prevState, room]);
     };
 
+    const deleteRoomId = (roomId) => {
+        setRooms(rooms.filter((room) => room.id !== roomId));
+    };
+
     useEffect(() => {
         if (channel?.rooms) {
             setRooms(channel.rooms);
@@ -91,6 +95,7 @@ const Channel = ({ channel, removeChannel, editChannel }) => {
                             key={room.id}
                             room={room}
                             isSelected={selectedRoomId === room.id}
+                            deleteRoomId={deleteRoomId}
                         />
                     ))}
                 </Collapse>

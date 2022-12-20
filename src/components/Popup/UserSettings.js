@@ -5,7 +5,7 @@ import {
     setAudioOutputDeviceId,
     setVideoInputDeviceId,
 } from "../../features/userSlice";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import "react-tabs/style/react-tabs.css";
 import { Tab, TabList, TabPanel, Tabs } from "react-tabs";
 import Popup from "reactjs-popup";
@@ -16,6 +16,15 @@ const Settings = () => {
     const [audioInputDevices, setAudioInputDevices] = useState([]);
     const [audioOutputDevices, setAudioOutputDevices] = useState([]);
     const [videoInputDevices, setVideoInputDevices] = useState([]);
+    const audioInputDeviceId = useSelector(
+        (state) => state.user.audioInputDeviceId
+    );
+    const audioOutputDeviceId = useSelector(
+        (state) => state.user.audioOutputDeviceId
+    );
+    const videoInputDeviceId = useSelector(
+        (state) => state.user.videoInputDeviceId
+    );
 
     const listAudioDevices = useCallback(async () => {
         const devices = await Room.getLocalDevices("audioinput");
@@ -89,7 +98,12 @@ const Settings = () => {
                                     {audioInputDevices.map((device, i) => (
                                         <option
                                             key={device.deviceId}
-                                            selected={i === 0}
+                                            selected={
+                                                audioInputDeviceId
+                                                    ? audioInputDeviceId ===
+                                                      device.deviceId
+                                                    : i === 0
+                                            }
                                             value={device.deviceId}
                                         >
                                             {device.label}
@@ -115,7 +129,12 @@ const Settings = () => {
                                     {audioOutputDevices.map((device, i) => (
                                         <option
                                             key={device.deviceId}
-                                            selected={i === 0}
+                                            selected={
+                                                audioOutputDeviceId
+                                                    ? audioOutputDeviceId ===
+                                                      device.deviceId
+                                                    : i === 0
+                                            }
                                             value={device.deviceId}
                                         >
                                             {device.label}
@@ -140,7 +159,12 @@ const Settings = () => {
                                 {videoInputDevices.map((device, i) => (
                                     <option
                                         key={device.deviceId}
-                                        selected={i === 0}
+                                        selected={
+                                            videoInputDeviceId
+                                                ? videoInputDeviceId ===
+                                                  device.deviceId
+                                                : i === 0
+                                        }
                                         value={device.deviceId}
                                     >
                                         {device.label}
