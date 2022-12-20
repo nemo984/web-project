@@ -8,7 +8,7 @@ export const getAuthorizationHeader = () => {
 
 const axiosInstance = axios.create({
     baseURL: process.env.REACT_APP_DJANGO_URL,
-    timeout: 3000,
+    timeout: 10000,
     headers: {
         Authorization: getAuthorizationHeader(),
         "Content-Type": "application/json",
@@ -26,7 +26,7 @@ axiosInstance.interceptors.response.use(
     },
     function (error) {
         const err = JSON.stringify(error?.response?.data ?? error.message);
-        toast.error(JSON.stringify(error.response.data));
+        toast.error(JSON.stringify(err));
         return Promise.reject(error);
     }
 );

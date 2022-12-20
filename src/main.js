@@ -28,7 +28,9 @@ export function Main() {
         sidebarRef.current.style.flexBasis = "325px";
 
         return () => {
-            resizerRef.current.removeEventListener("mousedown", init);
+            if (resizerRef && resizerRef.current) {
+                resizerRef.current.removeEventListener("mousedown", init);
+            }
         };
     }, []);
 

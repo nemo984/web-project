@@ -56,4 +56,7 @@ class Room(models.Model):
 
 @receiver(pre_delete, sender=Room)
 def deleteLivekitRoom(sender, instance, **kwargs):  
-    delete_room(instance)
+    try:
+        delete_room(instance)
+    except:
+        pass

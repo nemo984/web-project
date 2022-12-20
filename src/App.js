@@ -1,6 +1,6 @@
 import Login from "./login";
 import {
-    BrowserRouter as Router,
+    BrowserRouter,
     Navigate,
     Outlet,
     Route,
@@ -9,21 +9,21 @@ import {
     useNavigate,
     useParams,
 } from "react-router-dom";
+
 import Main from "./main";
 import axiosInstance from "./api/axios";
 import { useEffect } from "react";
-import axios from "axios";
 function App() {
     return (
-        <>
+        <BrowserRouter>
             <Routes>
-                <Route exact path="/" element={<ProtectedRoute />}>
-                    <Route exact path="/" element={<Main />} />
+                <Route path="/" element={<ProtectedRoute />}>
+                    <Route path="/" element={<Main />} />
                 </Route>
-                <Route exact path="/login" element={<Login />} />
-                <Route exact path="/invite/:code" element={<InviteLink />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/invite/:code" element={<InviteLink />} />
             </Routes>
-        </>
+        </BrowserRouter>
     );
 }
 
