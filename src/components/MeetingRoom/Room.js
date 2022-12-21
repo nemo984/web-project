@@ -12,7 +12,6 @@ const Room = ({ token, handleFullScreen, onConnected }) => {
             url={url}
             token={token}
             onConnected={(room) => {
-                console.log(room);
                 onConnected(room);
                 // size not including local participant
                 dispatch(setSelectedRoomInCount(room.participants.size + 1));

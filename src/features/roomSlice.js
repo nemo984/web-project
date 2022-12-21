@@ -25,13 +25,13 @@ export const roomSlice = createSlice({
             state.switching = false;
         },
         leaveRoom: (state) => {
-            state.roomId = "";
-            state.loading = "idle";
-            state.selectedRoomId = -1;
             state.selectedRoomInCount =
                 state.selectedRoomInCount > 0
                     ? state.selectedRoomInCount - 1
                     : 0;
+            state.roomId = "";
+            state.selectedRoomId = -1;
+            state.loading = "idle";
             state.currentRoom = {};
             state.isInRoom = false;
         },

@@ -16,7 +16,6 @@ const ControlBar = ({ handleFullScreen, room }) => {
     };
 
     const toggleMicrophone = async () => {
-        console.log(room);
         await room.localParticipant.setMicrophoneEnabled(!isMicrophoneEnabled);
         setIsMicrophoneEnabled((prevState) => !prevState);
     };

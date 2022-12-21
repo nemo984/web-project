@@ -27,7 +27,6 @@ const Login = () => {
                     }
                 )
                 .then((res) => {
-                    console.log(res);
                     localStorage.setItem("access_token", res.data.access_token);
                     localStorage.setItem(
                         "refresh_token",

@@ -34,13 +34,12 @@ const InviteLink = () => {
     let { code } = useParams();
     useEffect(() => {
         if (!authenticated || !code) {
-            console.log(prevLocation);
             navigate(`/login?redirectTo=${prevLocation.pathname}`);
         } else {
             axiosInstance
                 .post(`/invite/${code}`)
                 .then(navigate("/"))
-                .catch((e) => console.log(e));
+                .catch(console.error);
         }
     }, [code, authenticated, navigate, prevLocation]);
 
